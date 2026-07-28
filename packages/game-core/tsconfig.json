@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+
+  "compilerOptions": {
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "sourceMap": true,
+    "composite": true
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
+}
