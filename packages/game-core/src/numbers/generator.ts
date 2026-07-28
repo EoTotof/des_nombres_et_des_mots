@@ -1,4 +1,5 @@
 import { popNRandomValuesFromArray } from "../utils";
+import { Tile } from "./types";
 
 const SMALL_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const SMALL_NUMBERS_POOL = [...SMALL_NUMBERS, ...SMALL_NUMBERS];
@@ -10,13 +11,11 @@ const MAX_TARGET = 1000; // exclusive (max pick is 999)
 
 const NUMBER_COUNT = 6;
 
-function generateTargetNumber(): number {
+export function generateTargetNumber(): number {
   return Math.floor(Math.random() * (MAX_TARGET - MIN_TARGET)) + MIN_TARGET;
 }
 
-export function generateNumbersGame(
-  bigNumberCount: number = 2,
-): [number[], number] {
+export function generateInitialTiles(bigNumberCount: number): Tile[] {
   if (
     bigNumberCount > NUMBER_COUNT ||
     bigNumberCount > BIG_NUMBERS_POOL.length
@@ -34,7 +33,9 @@ export function generateNumbersGame(
     SMALL_NUMBERS_POOL,
   );
 
-  const targetNumber = generateTargetNumber();
-
-  return [[...bigNumbers, ...smallNumbers], targetNumber];
+  return [...bigNumbers, ...smallNumbers].map((value, index) => ({
+    id: index,
+    value,
+    isInitial: true,
+  }));
 }

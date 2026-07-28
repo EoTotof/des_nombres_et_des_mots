@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "pnpm --parallel --filter './apps/*' dev",
     "test": "pnpm --recursive test",
-    "build": "pnpm --recursive build"
+    "build": "pnpm --recursive build",
+    "lint": "pnpm --recursive lint"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
