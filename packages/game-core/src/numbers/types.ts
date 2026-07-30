@@ -1,5 +1,5 @@
 export type Tile = {
-  id: number;
+  id: string;
   value: number;
   isInitial: boolean;
 };

@@ -1,6 +1,6 @@
 import { Operator, Tile } from "./types";
 
-export default class Operation {
+export class Operation {
   left: Tile;
   right: Tile;
   operator: Operator;
@@ -31,13 +31,13 @@ export default class Operation {
     }
 
     return {
-      id: this.left.id * 10 + this.right.id,
+      id: this.left.id + "-" + this.right.id,
       value,
       isInitial: false,
     };
   }
 
-  isValid(): boolean {
+  get isValid(): boolean {
     return (
       this.result.value > 0 &&
       this.result.value === Math.floor(this.result.value)

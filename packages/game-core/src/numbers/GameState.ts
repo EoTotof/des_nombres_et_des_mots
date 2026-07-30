@@ -1,8 +1,8 @@
 import { generateInitialTiles, generateTargetNumber } from "./generator";
-import Operation from "./Operation";
+import { Operation } from "./Operation";
 import { Tile } from "./types";
 
-export default class GameState {
+export class GameState {
   initialTiles: Tile[];
   targetNumber: number;
   operations: Operation[];

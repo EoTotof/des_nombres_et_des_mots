@@ -24,7 +24,7 @@ export function generateInitialTiles(bigNumberCount: number): Tile[] {
   }
 
   const [bigNumbers] = popNRandomValuesFromArray(
-    NUMBER_COUNT,
+    bigNumberCount,
     BIG_NUMBERS_POOL,
   );
 
@@ -34,7 +34,7 @@ export function generateInitialTiles(bigNumberCount: number): Tile[] {
   );
 
   return [...bigNumbers, ...smallNumbers].map((value, index) => ({
-    id: index,
+    id: index.toString(),
     value,
     isInitial: true,
   }));
