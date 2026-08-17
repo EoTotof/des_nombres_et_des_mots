@@ -1,5 +1,5 @@
 import { popNRandomValuesFromArray } from "../utils";
-import { Tile } from "./types";
+import { NumberTile } from "./types";
 
 const SMALL_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const SMALL_NUMBERS_POOL = [...SMALL_NUMBERS, ...SMALL_NUMBERS];
@@ -15,7 +15,7 @@ export function generateTargetNumber(): number {
   return Math.floor(Math.random() * (MAX_TARGET - MIN_TARGET)) + MIN_TARGET;
 }
 
-export function generateInitialTiles(bigNumberCount: number): Tile[] {
+export function generateInitialTiles(bigNumberCount: number): NumberTile[] {
   if (
     bigNumberCount > NUMBER_COUNT ||
     bigNumberCount > BIG_NUMBERS_POOL.length
@@ -23,14 +23,16 @@ export function generateInitialTiles(bigNumberCount: number): Tile[] {
     throw Error("Big number count is too large");
   }
 
+  const bigNumbersPool = [...BIG_NUMBERS_POOL];
   const [bigNumbers] = popNRandomValuesFromArray(
     bigNumberCount,
-    BIG_NUMBERS_POOL,
+    bigNumbersPool,
   );
 
+  const smallNumbersPool = [...SMALL_NUMBERS_POOL];
   const [smallNumbers] = popNRandomValuesFromArray(
     NUMBER_COUNT - bigNumberCount,
-    SMALL_NUMBERS_POOL,
+    smallNumbersPool,
   );
 
   return [...bigNumbers, ...smallNumbers].map((value, index) => ({

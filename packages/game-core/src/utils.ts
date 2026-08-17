@@ -7,7 +7,7 @@ export function popRandomValueFromArray<T>(array: Array<T>): [T, Array<T>] {
   const value = array.splice(valueIndex, 1)[0];
 
   if (value === undefined) {
-    throw Error("Picked value is undefined");
+    throw Error("Popped value is undefined");
   }
 
   return [value, array];
@@ -18,7 +18,7 @@ export function popNRandomValuesFromArray<T>(
   array: Array<T>,
 ): [T[], Array<T>] {
   if (n > array.length) {
-    throw Error("Cannot pick more values than array length");
+    throw Error("Cannot pop more values than array length");
   }
 
   const values: T[] = [];

@@ -7,7 +7,7 @@
   "license": "ISC",
   "private": "true",
   "scripts": {
-    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "dev": "pnpm --parallel --recursive dev",
     "test": "pnpm --recursive test",
     "build": "pnpm --recursive build",
     "lint": "pnpm --recursive lint"

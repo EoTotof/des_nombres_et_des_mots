@@ -1,3 +1,3 @@
 export * from "./Operation";
-export * from "./GameState";
+export * from "./NumbersGameState";
 export * from "./types";

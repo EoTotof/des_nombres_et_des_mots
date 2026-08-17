@@ -27,7 +27,16 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="font-sans min-h-full flex flex-col">{children}</body>
+      <body className="font-sans min-h-full flex flex-col">
+        <div className="flex flex-col justify-stretch flex-1">
+          <div className="mx-auto container py-16 px-16 flex flex-col justify-stretch">
+            <div className="text-3xl/28 mb-24 uppercase font-bold">
+              Des nombres <br /> & des mots
+            </div>
+            {children}
+          </div>
+        </div>
+      </body>
     </html>
   );
 }

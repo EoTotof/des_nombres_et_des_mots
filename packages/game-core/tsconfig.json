@@ -7,11 +7,16 @@
     "declaration": true,
     "emitDeclarationOnly": false,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "sourceMap": true,
-    "composite": true
+    "composite": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "include": [
-    "src/**/*"
+    "index.ts",
+    "data/**/*.json",
+    "src/**/*",
+    "test/**/*"
   ]
 }
