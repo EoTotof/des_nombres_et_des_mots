@@ -9,3 +9,15 @@ export function useScreenSize(): ScreenSizeT {
   if (width < breakpoints.lg) return "md";
   return "lg";
 }
+
+export function decrementScreenSize(size: ScreenSizeT) {
+  switch (size) {
+    case "xs":
+    case "sm":
+      return "xs";
+    case "md":
+      return "sm";
+    case "lg":
+      return "md";
+  }
+}

@@ -32,3 +32,27 @@ export function popNRandomValuesFromArray<T>(
 
   return [values, arrayAcc];
 }
+
+export function pickRandomValueFromArray<T>(array: Array<T>): T {
+  if (array.length === 0) {
+    throw Error("Array is empty");
+  }
+
+  const valueIndex = Math.floor(Math.random() * array.length);
+  const value = array[valueIndex];
+
+  if (value === undefined) {
+    throw Error("Picked value is undefined");
+  }
+
+  return value;
+}
+
+export function pickNRandomValuesFromArray<T>(n: number, array: Array<T>): T[] {
+  const values: T[] = [];
+  for (let i = 0; i < n; i++) {
+    values.push(pickRandomValueFromArray(array));
+  }
+
+  return values;
+}

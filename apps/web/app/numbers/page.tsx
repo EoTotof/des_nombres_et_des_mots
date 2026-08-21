@@ -2,14 +2,12 @@
 
 import GameInterface from "@/app/numbers/_components/GameInterface";
 import Button from "@/components/Button";
-import Dialog from "@/components/Dialog";
 import {
   DEFAULT_NUMBERS_ROUND_PARAMETERS,
-  GameState,
+  NumbersGameState,
   NumbersRoundParameters,
 } from "@dnedm/game-core";
 import { useCallback, useState } from "react";
-import MoveHistory from "./_components/interface/MoveHistory";
 import { NumbersGameStateContext } from "./_contexts/gameStateContext";
 import { useCountdown } from "@/hooks/useCountdown";
 import GameParameters from "./_components/GameParameters";
@@ -22,16 +20,16 @@ export default function Numbers() {
       defaultValue: DEFAULT_NUMBERS_ROUND_PARAMETERS,
       initializeWithValue: false,
     });
-  const [gameState, setGameState] = useState<GameState | null>(null);
-  const [bestAttempt, setBestAttempt] = useState<GameState | null>(null);
-  const [solution, setSolution] = useState<GameState | null>(null);
+  const [gameState, setGameState] = useState<NumbersGameState | null>(null);
+  const [bestAttempt, setBestAttempt] = useState<NumbersGameState | null>(null);
+  const [solution, setSolution] = useState<NumbersGameState | null>(null);
 
-  function updateGameState(updatedState: GameState) {
+  function updateGameState(updatedState: NumbersGameState) {
     setGameState(updatedState);
-    // TODO add "equals" method to GameState to update state only if needed
+    // TODO add "equals" method to NumbersGameState to update state only if needed
     setBestAttempt(
       bestAttempt
-        ? GameState.getBestAttempt(updatedState, bestAttempt)
+        ? NumbersGameState.getBestAttempt(updatedState, bestAttempt)
         : updatedState,
     );
   }
@@ -40,23 +38,25 @@ export default function Numbers() {
     if (!gameState) {
       throw Error("Cannot validate if no attempt");
     }
-    const computedSolution = gameState.getSolution();
+    const computedSolution = gameState.getSolvedGameState();
     if (bestAttempt) {
-      setSolution(GameState.getBestAttempt(bestAttempt, computedSolution));
+      setSolution(
+        NumbersGameState.getBestAttempt(bestAttempt, computedSolution),
+      );
     } else {
       setBestAttempt(gameState);
       setSolution(computedSolution);
     }
   }, [bestAttempt, gameState]);
 
-  const [timer, startTimer] = useCountdown(onValidate);
+  const [timer, startTimer, resetTimer] = useCountdown(onValidate);
 
   function startNewGame() {
     if (!parameters) return;
 
     setSolution(null);
     setBestAttempt(null);
-    setGameState(GameState.initializeGame(parameters));
+    setGameState(NumbersGameState.initializeGame(parameters));
     if (parameters.duration) {
       startTimer(parameters.duration);
     }
@@ -80,11 +80,15 @@ export default function Numbers() {
   return (
     <NumbersGameStateContext value={{ currentGameState: gameState }}>
       <GameInterface
+        key={gameState.initialTiles.map(({ value }) => value).join("")}
         gameState={gameState}
         timer={timer}
         bestAttempt={bestAttempt}
         updateGameState={updateGameState}
-        onValidate={onValidate}
+        onValidate={() => {
+          resetTimer();
+          onValidate();
+        }}
       />
       {bestAttempt && solution && (
         <GameResultDialog

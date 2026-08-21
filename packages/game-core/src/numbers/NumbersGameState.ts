@@ -1,4 +1,8 @@
-import { generateInitialTiles, generateTargetNumber } from "./generator";
+import {
+  BIG_NUMBERS_POOL,
+  generateInitialNumberTiles,
+  generateTargetNumber,
+} from "./generator";
 import { Operation } from "./Operation";
 import { solve } from "./solver";
 import { NumbersRoundParameters, NumberTile } from "./types";
@@ -8,6 +12,12 @@ export const DEFAULT_NUMBERS_ROUND_PARAMETERS: NumbersRoundParameters = {
   allowUnreachableTarget: true,
   duration: 60,
 };
+
+const MAX_BIG_NUMBER_COUNT = BIG_NUMBERS_POOL.length;
+
+function getRandomBigNumberCount(): number {
+  return Math.floor(Math.random() * (MAX_BIG_NUMBER_COUNT + 1));
+}
 
 export class NumbersGameState {
   initialTiles: NumberTile[];
@@ -32,14 +42,14 @@ export class NumbersGameState {
 
     while (true) {
       const gameState = new NumbersGameState(
-        generateInitialTiles(bigNumberCount ?? Math.floor(Math.random() * 5)),
+        generateInitialNumberTiles(bigNumberCount ?? getRandomBigNumberCount()),
         generateTargetNumber(),
         [],
         parameters,
       );
 
       const canReachTarget =
-        gameState.getSolution().closestValue === gameState.targetNumber;
+        gameState.getSolvedGameState().closestValue === gameState.targetNumber;
 
       if (allowUnreachableTarget || canReachTarget) {
         return gameState;
@@ -111,6 +121,7 @@ export class NumbersGameState {
   }
 
   pushOperation(operation: Operation): NumbersGameState {
+    // TODO we can check if operation is valid
     return new NumbersGameState(
       this.initialTiles,
       this.targetNumber,
@@ -157,7 +168,7 @@ export class NumbersGameState {
     return gameStateA;
   }
 
-  getSolution(): NumbersGameState {
-    return solve(this.initialTiles, this.targetNumber);
+  getSolvedGameState(): NumbersGameState {
+    return solve(this);
   }
 }

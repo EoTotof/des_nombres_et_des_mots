@@ -2,11 +2,15 @@ import { NumbersGameState } from "./NumbersGameState";
 import { Operation } from "./Operation";
 import { NumberTile } from "./types";
 
-export function solve(
-  initialTiles: NumberTile[],
-  targetNumber: number,
-): NumbersGameState {
-  const initialGameState = new NumbersGameState(initialTiles, targetNumber, []);
+export function solve(gameState: NumbersGameState): NumbersGameState {
+  const initialTiles = gameState.initialTiles;
+  const targetNumber = gameState.targetNumber;
+  const initialGameState = new NumbersGameState(
+    initialTiles,
+    targetNumber,
+    [],
+    gameState.parameters,
+  );
 
   let bestSolution = {
     gameState: initialGameState,
@@ -44,9 +48,12 @@ export function solve(
           currentDepth < bestSolution.gameState.operations.length)
       ) {
         bestSolution = {
-          gameState: new NumbersGameState(initialTiles, targetNumber, [
-            ...pastOperations,
-          ]),
+          gameState: new NumbersGameState(
+            initialTiles,
+            targetNumber,
+            [...pastOperations],
+            gameState.parameters,
+          ),
           distance,
         };
       }

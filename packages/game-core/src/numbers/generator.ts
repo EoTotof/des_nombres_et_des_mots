@@ -4,7 +4,7 @@ import { NumberTile } from "./types";
 const SMALL_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const SMALL_NUMBERS_POOL = [...SMALL_NUMBERS, ...SMALL_NUMBERS];
 const BIG_NUMBERS = [25, 50, 75, 100];
-const BIG_NUMBERS_POOL = [...BIG_NUMBERS];
+export const BIG_NUMBERS_POOL = [...BIG_NUMBERS];
 
 const MIN_TARGET = 100; // inclusive
 const MAX_TARGET = 1000; // exclusive (max pick is 999)
@@ -15,7 +15,9 @@ export function generateTargetNumber(): number {
   return Math.floor(Math.random() * (MAX_TARGET - MIN_TARGET)) + MIN_TARGET;
 }
 
-export function generateInitialTiles(bigNumberCount: number): NumberTile[] {
+export function generateInitialNumberTiles(
+  bigNumberCount: number,
+): NumberTile[] {
   if (
     bigNumberCount > NUMBER_COUNT ||
     bigNumberCount > BIG_NUMBERS_POOL.length

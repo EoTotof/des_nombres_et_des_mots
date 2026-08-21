@@ -1,29 +1,29 @@
 "use client";
 
-import { Tile } from "@dnedm/game-core";
+import { NumberTile } from "@dnedm/game-core";
 import { useMeasure } from "@react-hookz/web";
 import clsx from "clsx";
 import { useNumbersGameStateContext } from "../../_contexts/gameStateContext";
 import { ScreenSizeT } from "@/lib/tailwind";
 import { MouseEventHandler } from "react";
 
-type TileCardProps = {
+type NumberTileCardProps = {
   size: ScreenSizeT;
-  tile: Tile;
+  tile: NumberTile;
   isInvalid?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   onMouseEnter?: MouseEventHandler<HTMLButtonElement>;
   onMouseLeave?: MouseEventHandler<HTMLButtonElement>;
 };
 
-export default function TileCard({
+export default function NumberTileCard({
   size,
   tile,
   isInvalid,
   onClick,
   onMouseEnter,
   onMouseLeave,
-}: TileCardProps) {
+}: NumberTileCardProps) {
   const { currentGameState } = useNumbersGameStateContext();
 
   const [cardMeasures, cardRef] = useMeasure<HTMLDivElement>();
@@ -58,8 +58,8 @@ export default function TileCard({
       <span
         className={clsx(
           "flex text-white rounded-lg shadow-sm/30",
-          tileCardClassNameVariants[size],
-          tileCardPaddingVariants[size],
+          numberTileCardClassNameVariants[size],
+          numberTileCardPaddingVariants[size],
         )}
         style={{ backgroundColor }}
       >
@@ -80,14 +80,14 @@ export default function TileCard({
   );
 }
 
-const tileCardPaddingVariants: Record<ScreenSizeT, string> = {
+const numberTileCardPaddingVariants: Record<ScreenSizeT, string> = {
   xs: "px-4",
   sm: "px-4",
   md: "px-8",
   lg: "px-8",
 };
 
-export const tileCardClassNameVariants: Record<ScreenSizeT, string> = {
+export const numberTileCardClassNameVariants: Record<ScreenSizeT, string> = {
   xs: "h-36 w-44 text-xl",
   sm: "h-48 w-64 text-3xl",
   md: "h-56 w-66 text-4xl",

@@ -1,5 +1,5 @@
 import TargetCard from "@/app/numbers/_components/cards/TargetCard";
-import { GameState } from "@dnedm/game-core";
+import { NumbersGameState } from "@dnedm/game-core";
 import { useMemo, useState } from "react";
 import useCurrentMove from "../_hooks/useCurrentMove";
 import CurrentMove from "./interface/CurrentMove";
@@ -12,10 +12,10 @@ import { useScreenSize } from "@/hooks/useScreenSize";
 import Timer from "@/components/Timer";
 
 type GameInterfaceProps = {
-  gameState: GameState;
+  gameState: NumbersGameState;
   timer: number | null;
-  bestAttempt: GameState | null;
-  updateGameState: (gameState: GameState) => void;
+  bestAttempt: NumbersGameState | null;
+  updateGameState: (gameState: NumbersGameState) => void;
   onValidate: () => void;
 };
 
@@ -74,22 +74,28 @@ export default function GameInterface({
           />
         </motion.div>
       </main>
-      <aside className="">
-        <TargetCard size={screenSize} targetValue={gameState.targetNumber} />
-        {timer !== null ? (
-          <div className="mt-32">
-            <Timer currentTime={timer} maxTime={60} showTime />
-          </div>
-        ) : null}
-        {bestAttempt && (
-          <div className="mt-64 flex flex-col items-center">
-            <BestAttempt bestAttempt={bestAttempt} />
-            <Button className="mt-16" onClick={onValidate}>
-              Valider
-            </Button>
-          </div>
-        )}
-      </aside>
+      {screenSize !== "xs" && (
+        <aside className="sm:w-128 md:w-196 lg:w-248">
+          <TargetCard size={screenSize} targetValue={gameState.targetNumber} />
+          {timer !== null ? (
+            <div className="mt-32">
+              <Timer
+                currentTime={timer}
+                maxTime={gameState.parameters.duration || 0}
+                showTime
+              />
+            </div>
+          ) : null}
+          {bestAttempt && (
+            <div className="mt-64 flex flex-col items-center">
+              <BestAttempt bestAttempt={bestAttempt} />
+              <Button className="mt-16" onClick={onValidate}>
+                Valider
+              </Button>
+            </div>
+          )}
+        </aside>
+      )}
     </div>
   );
 }

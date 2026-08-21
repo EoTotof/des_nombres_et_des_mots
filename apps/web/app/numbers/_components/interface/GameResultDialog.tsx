@@ -1,11 +1,11 @@
 import Dialog from "@/components/Dialog";
-import { GameState } from "@dnedm/game-core";
+import { NumbersGameState } from "@dnedm/game-core";
 import MoveHistory from "./MoveHistory";
 import Button from "@/components/Button";
 
 type GameResultDialogProps = {
-  bestAttempt: GameState;
-  solution: GameState;
+  bestAttempt: NumbersGameState;
+  solution: NumbersGameState;
   startNewGame: () => void;
 };
 

@@ -1,14 +1,14 @@
 "use client";
 
-import { Operator, Tile, Token } from "@dnedm/game-core";
-import TileCard from "@/app/numbers/_components/cards/TileCard";
+import { Operator, NumberTile, Token } from "@dnedm/game-core";
+import NumberTileCard from "@/app/numbers/_components/cards/NumberTileCard";
 import OperatorCard from "../cards/OperatorCard";
 import { AnimatePresence, motion } from "motion/react";
 import { useScreenSize } from "@/hooks/useScreenSize";
 import { Dispatch, SetStateAction } from "react";
 
 type TilePoolProps = {
-  tiles: Tile[];
+  tiles: NumberTile[];
   selectToken: (token: Token) => void;
   setIsTileHovered: Dispatch<SetStateAction<boolean>>;
   setIsOperatorHovered: Dispatch<SetStateAction<boolean>>;
@@ -33,7 +33,7 @@ export default function TilePool({
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
             >
-              <TileCard
+              <NumberTileCard
                 size={screenSize}
                 tile={tile}
                 onClick={() => selectToken(tile)}

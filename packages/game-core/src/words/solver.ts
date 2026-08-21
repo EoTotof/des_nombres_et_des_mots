@@ -1,19 +1,23 @@
-import { LetterTile } from "./types";
-import rawAnagrams from "../../data/anagrams.json";
+import rawAnagrams from "../../data/fr/anagrams.json";
+import { WordsGameState } from "./WordsGameState";
 
 const anagrams = rawAnagrams as Record<string, string[]>;
 
-export function solve(
-  tiles: LetterTile[],
-): string[] /* TODO GameState for consistency? */ {
+export function wordIsValid(word: string): boolean {
+  const key = [...word].sort().join("");
+  return Boolean(anagrams[key] && anagrams[key].includes(word));
+}
+
+export function solve(gameState: WordsGameState): WordsGameState {
+  const tiles = gameState.initialTiles;
   const solutions = new Set<string>();
 
-  let currentDepth = new Set<string>(
+  let currentDepth = new Set<string>([
     tiles
       .map(({ letter }) => letter)
       .sort()
       .join(""),
-  );
+  ]);
 
   while (currentDepth.size > 0) {
     const nextDepth = new Set<string>();
@@ -27,7 +31,11 @@ export function solve(
     }
 
     if (solutions.size > 0) {
-      return [...solutions].sort();
+      return new WordsGameState(
+        tiles,
+        [...solutions].sort(),
+        gameState.parameters,
+      );
     }
 
     for (const sortedLetters of currentDepth) {
@@ -40,5 +48,6 @@ export function solve(
     currentDepth = nextDepth;
   }
 
-  return [...solutions].sort();
+  // No solution found, highly unlikely
+  return new WordsGameState(tiles, [], gameState.parameters);
 }

@@ -1,8 +1,8 @@
-import { GameState } from "@dnedm/game-core";
+import { NumbersGameState } from "@dnedm/game-core";
 import { createContext, useContext } from "react";
 
 export type NumbersGameStateContextT = {
-  currentGameState: GameState;
+  currentGameState: NumbersGameState;
 };
 
 export const NumbersGameStateContext =

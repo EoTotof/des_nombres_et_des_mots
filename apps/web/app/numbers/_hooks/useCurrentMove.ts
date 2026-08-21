@@ -1,10 +1,16 @@
-import { isOperator, Operation, Operator, Tile, Token } from "@dnedm/game-core";
+import {
+  isOperator,
+  Operation,
+  Operator,
+  NumberTile,
+  Token,
+} from "@dnedm/game-core";
 import { useEffect, useState } from "react";
 
 export type CurrentMoveT = {
-  leftTile: Tile | null;
+  leftTile: NumberTile | null;
   operator: Operator | null;
-  rightTile: Tile | null;
+  rightTile: NumberTile | null;
 };
 
 type UseCurrentMoveReturnT = {

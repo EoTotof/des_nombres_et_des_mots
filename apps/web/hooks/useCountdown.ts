@@ -4,12 +4,15 @@ const INTERVAL_IN_MILLISECONDS = 100;
 
 export function useCountdown(
   onComplete?: () => void,
-): [number | null, (duration: number) => void] {
+): [number | null, (duration: number) => void, () => void] {
   const [duration, setDuration] = useState<number | null>(null);
   const [time, setTime] = useState<number | null>(null);
   const referenceTime = useRef<number | null>(null);
 
-  const handleComplete = useEffectEvent(() => onComplete?.());
+  const handleComplete = useEffectEvent(() => {
+    setDuration(null);
+    onComplete?.();
+  });
 
   useEffect(() => {
     if (duration === null) {
@@ -29,11 +32,19 @@ export function useCountdown(
       }
     }, INTERVAL_IN_MILLISECONDS);
 
-    return () => clearInterval(intervalId);
+    return () => {
+      setTime(null);
+      setDuration(null);
+      clearInterval(intervalId);
+    };
   }, [duration]);
 
   return [
     time !== null ? Math.floor(time / 1000) : null,
-    (duration: number) => setDuration(duration),
+    (newDuration: number) => setDuration(newDuration),
+    () => {
+      setTime(null);
+      setDuration(null);
+    },
   ];
 }

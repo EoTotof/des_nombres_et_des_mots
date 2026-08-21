@@ -1,16 +1,16 @@
-import { GameState, Tile } from "@dnedm/game-core";
-import TileCard from "../cards/TileCard";
+import { NumbersGameState, NumberTile } from "@dnedm/game-core";
+import NumberTileCard from "../cards/NumberTileCard";
 import { useMemo } from "react";
 import { useScreenSize } from "@/hooks/useScreenSize";
 
 type BestAttemptProps = {
-  bestAttempt: GameState;
+  bestAttempt: NumbersGameState;
 };
 
 export default function BestAttempt({ bestAttempt }: BestAttemptProps) {
   const screenSize = useScreenSize();
 
-  const tile: Tile = useMemo(
+  const tile: NumberTile = useMemo(
     () => ({
       id: "best",
       value: bestAttempt.closestValue,
@@ -21,7 +21,7 @@ export default function BestAttempt({ bestAttempt }: BestAttemptProps) {
 
   return (
     <div>
-      <TileCard size={screenSize} tile={tile} />
+      <NumberTileCard size={screenSize} tile={tile} />
     </div>
   );
 }

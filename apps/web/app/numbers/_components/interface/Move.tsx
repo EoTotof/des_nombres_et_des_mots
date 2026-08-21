@@ -1,5 +1,7 @@
-import { Operator, Tile, Token } from "@dnedm/game-core";
-import TileCard, { tileCardClassNameVariants } from "../cards/TileCard";
+import { Operator, NumberTile, Token } from "@dnedm/game-core";
+import NumberTileCard, {
+  numberTileCardClassNameVariants,
+} from "../cards/NumberTileCard";
 import OperatorCard, {
   operatorCardClassNameVariants,
   operatorIconSizeVariants,
@@ -10,10 +12,10 @@ import { ScreenSizeT } from "@/lib/tailwind";
 
 type MoveProps = {
   size: ScreenSizeT;
-  leftTile: Tile | null;
+  leftTile: NumberTile | null;
   operator: Operator | null;
-  rightTile: Tile | null;
-  resultTile: Tile | null;
+  rightTile: NumberTile | null;
+  resultTile: NumberTile | null;
   isValid?: boolean;
   onClickToken?: (token: Token) => void;
   onClickResult?: () => void;
@@ -49,12 +51,12 @@ export default function Move({
         className={clsx(
           slotClassName,
           tileSlotClassName,
-          tileCardClassNameVariants[size],
+          numberTileCardClassNameVariants[size],
           !leftTile && isTileHovered ? "inset-shadow-sm/40" : "inset-shadow-xs",
         )}
       >
         {leftTile ? (
-          <TileCard
+          <NumberTileCard
             size={size}
             tile={leftTile}
             onClick={onClickToken ? () => onClickToken(leftTile) : undefined}
@@ -83,14 +85,14 @@ export default function Move({
         className={clsx(
           slotClassName,
           tileSlotClassName,
-          tileCardClassNameVariants[size],
+          numberTileCardClassNameVariants[size],
           leftTile && !rightTile && isTileHovered
             ? "inset-shadow-sm/40"
             : "inset-shadow-xs",
         )}
       >
         {rightTile ? (
-          <TileCard
+          <NumberTileCard
             size={size}
             tile={rightTile}
             onClick={onClickToken ? () => onClickToken(rightTile) : undefined}
@@ -102,11 +104,11 @@ export default function Move({
         className={clsx(
           slotClassName,
           tileSlotClassName,
-          tileCardClassNameVariants[size],
+          numberTileCardClassNameVariants[size],
         )}
       >
         {resultTile ? (
-          <TileCard
+          <NumberTileCard
             size={size}
             tile={resultTile}
             isInvalid={!isValid}
