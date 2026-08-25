@@ -1,22 +1,25 @@
 {
-  "extends": "../../tsconfig.base.json",
-
   "compilerOptions": {
+    "target": "ES2022",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "noUncheckedIndexedAccess": true,
+    "incremental": true,
     "module": "es2022",
     "moduleResolution": "bundler",
     "declaration": true,
     "emitDeclarationOnly": false,
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "sourceMap": true,
     "composite": true,
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
   "include": [
-    "index.ts",
-    "data/**/*.json",
     "src/**/*",
-    "test/**/*"
+    "src/**/*.json"
   ]
 }

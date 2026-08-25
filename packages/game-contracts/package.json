@@ -1,0 +1,20 @@
+{
+  "name": "@dnedm/game-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "lint": "eslint",
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  }
+}

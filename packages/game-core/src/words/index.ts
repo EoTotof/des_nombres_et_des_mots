@@ -1,2 +1,2 @@
-export * from "./types";
-export * from "./WordsGameState";
+export * from "./words.types";
+export * from "./words.game-state";

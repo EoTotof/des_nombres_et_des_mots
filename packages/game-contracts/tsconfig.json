@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noUncheckedIndexedAccess": true,
+    "incremental": true,
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "composite": true
+  },
+  "include": [
+    "src/**/*",
+  ]
+}
