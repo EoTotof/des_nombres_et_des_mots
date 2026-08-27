@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
+import { AppModule } from "./app.module.js";
 import { IoAdapter } from "@nestjs/platform-socket.io";
 
 async function bootstrap() {
@@ -11,7 +11,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 }
 
 bootstrap();
