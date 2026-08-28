@@ -1,0 +1,99 @@
+import { GameRound } from "../game.round";
+import { PlayerId, RoundScore } from "../game.types";
+import { NumbersGameState } from "../../numbers/numbers.game-state";
+import { Operation } from "../../numbers/numbers.operation";
+
+const SOLUTION_SCORE = 10;
+const TARGET_REACHED_SCORE = 9;
+const TARGET_NOT_REACHED_SCORE = 7;
+
+export class NumbersRound extends GameRound<NumbersGameState, Operation> {
+  static initialize(
+    playerIds: PlayerId[],
+    initialGameState: NumbersGameState,
+  ): NumbersRound {
+    return new NumbersRound(
+      initialGameState,
+      Object.fromEntries(
+        playerIds.map((playerId) => [playerId, initialGameState.clone()]),
+      ),
+    );
+  }
+
+  pushMove(playerId: PlayerId, operation: Operation): void {
+    const gameState = this.playerStates[playerId];
+
+    if (!gameState) {
+      throw new Error(`Unknown player: ${playerId}`);
+    }
+
+    gameState.pushOperation(operation);
+  }
+
+  getScores(): RoundScore {
+    // Numbers round scoring
+    //  - 10 points if best attempt equivalent to game solution (target reached or as close as possible, in minimal amount of operations)
+    //  - if no one has found the best solution, 9 points if target reached by best player
+    //  - if no one has found the solution and no one has reached target, 7 points for best attempt among players
+    //  - decrement score for the following players, handling ties, capping score with previous rules
+    const solution = this.initialState.getSolvedGameState();
+
+    const rankedPlayers: [PlayerId, NumbersGameState][] = Object.entries(
+      this.playerStates,
+    ).toSorted(([, gameStateA], [, gameStateB]) => {
+      if (gameStateA.distanceToTarget === gameStateB.distanceToTarget) {
+        return gameStateA.operationCount - gameStateB.operationCount;
+      }
+      return gameStateA.distanceToTarget - gameStateB.distanceToTarget;
+    });
+
+    const scores: Record<PlayerId, number> = {};
+    let currentScore: number = SOLUTION_SCORE;
+    let tieCount = 0;
+
+    let previousGameState: NumbersGameState = solution;
+
+    for (const [player, gameState] of rankedPlayers) {
+      const hasSolution =
+        solution.distanceToTarget === gameState.distanceToTarget &&
+        solution.operationCount === gameState.operationCount;
+
+      if (hasSolution) {
+        scores[player] = SOLUTION_SCORE;
+        currentScore--;
+        continue;
+      }
+
+      if (currentScore <= 0) {
+        scores[player] = 0;
+        continue;
+      }
+
+      const isTie =
+        previousGameState &&
+        previousGameState.distanceToTarget === gameState.distanceToTarget &&
+        previousGameState.operationCount === gameState.operationCount;
+
+      tieCount++;
+      if (!isTie) {
+        // Attempt is not as good as previous players; reset tie count and decrement score by that amount
+        currentScore -= tieCount;
+        tieCount = 0;
+      }
+
+      const hasReachedTarget =
+        solution.distanceToTarget === gameState.distanceToTarget;
+      if (hasReachedTarget) {
+        currentScore = Math.min(currentScore, TARGET_REACHED_SCORE);
+        scores[player] = currentScore;
+      } else {
+        currentScore = Math.min(currentScore, TARGET_NOT_REACHED_SCORE);
+        scores[player] = currentScore;
+      }
+
+      previousGameState = gameState;
+    }
+
+    return scores;
+  }
+}

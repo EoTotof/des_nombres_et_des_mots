@@ -120,6 +120,14 @@ export class NumbersGameState {
     return closestValue;
   }
 
+  get operationCount(): number {
+    return this.operations.length;
+  }
+
+  get distanceToTarget(): number {
+    return Math.abs(this.targetNumber - this.closestValue);
+  }
+
   pushOperation(operation: Operation): NumbersGameState {
     // TODO we can check if operation is valid
     return new NumbersGameState(
@@ -147,21 +155,20 @@ export class NumbersGameState {
   static getBestAttempt(
     gameStateA: NumbersGameState,
     gameStateB: NumbersGameState,
-  ) {
+  ): NumbersGameState {
     if (gameStateA.targetNumber !== gameStateB.targetNumber) {
       throw Error("Cannot compare game states with different target values");
     }
 
-    const targetNumber = gameStateA.targetNumber;
-    const distanceToTargetA = Math.abs(gameStateA.closestValue - targetNumber);
-    const distanceToTargetB = Math.abs(gameStateB.closestValue - targetNumber);
+    const distanceToTargetA = gameStateA.distanceToTarget;
+    const distanceToTargetB = gameStateB.distanceToTarget;
 
     if (distanceToTargetA > distanceToTargetB) return gameStateB;
     if (distanceToTargetA < distanceToTargetB) return gameStateA;
 
-    // Same distance to target: we keep attempt with the most tiles remaining
+    // Same distance to target: we keep attempt with the least operations
     // In case of equality, we keep A arbitrarily
-    if (gameStateA.currentTiles.length < gameStateB.currentTiles.length) {
+    if (gameStateA.operationCount > gameStateB.operationCount) {
       return gameStateB;
     }
 
@@ -170,5 +177,14 @@ export class NumbersGameState {
 
   getSolvedGameState(): NumbersGameState {
     return solve(this);
+  }
+
+  clone(): NumbersGameState {
+    return new NumbersGameState(
+      this.initialTiles,
+      this.targetNumber,
+      this.operations,
+      this.parameters,
+    );
   }
 }

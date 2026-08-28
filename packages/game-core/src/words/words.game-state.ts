@@ -41,6 +41,17 @@ export class WordsGameState {
     );
   }
 
+  get longestWordLength(): number {
+    return this.words
+      .map((word) => word.length)
+      .reduce((acc, length) => Math.max(acc, length));
+  }
+
+  get longestWords(): LetterTile[][] {
+    const bestWordLength = this.longestWordLength;
+    return this.words.filter((word) => word.length === bestWordLength);
+  }
+
   validateWord(word: LetterTile[] | string): LetterTile[] {
     const wordAsString =
       typeof word === "string"
@@ -82,5 +93,9 @@ export class WordsGameState {
 
   getSolvedGameState(): WordsGameState {
     return solve(this);
+  }
+
+  clone(): WordsGameState {
+    return new WordsGameState(this.initialTiles, this.words, this.parameters);
   }
 }
