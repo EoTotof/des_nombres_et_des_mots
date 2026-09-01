@@ -1,16 +1,92 @@
-import { NumbersGameState } from "../numbers";
-import { WordsGameState } from "../words";
-import { CurrentRound, GameParameters, RoundScore } from "./game.types";
+import { GameParameters, PlayerId, RoundScore } from "./game.types";
+import { NumbersRound } from "./rounds/numbers.round";
+import { WordsRound } from "./rounds/words.round";
 
 export class GameState {
   parameters: GameParameters;
+  players: PlayerId[];
   pastRoundScores: RoundScore[];
-  currentRound:
-    CurrentRound<NumbersGameState> | CurrentRound<WordsGameState> | null;
+  currentRound: NumbersRound | WordsRound | null;
 
-  constructor(parameters: GameParameters) {
+  constructor(
+    parameters: GameParameters,
+    players: PlayerId[],
+    pastRoundScores: RoundScore[],
+    currentRound: NumbersRound | WordsRound | null,
+  ) {
     this.parameters = parameters;
-    this.pastRoundScores = [];
+    this.players = players;
+    this.pastRoundScores = pastRoundScores;
+    this.currentRound = currentRound;
+  }
+
+  static initializeGame(parameters: GameParameters, players: PlayerId[]) {
+    return new GameState(parameters, players, [], null);
+  }
+
+  getCurrentGameScores() {
+    const scores: Record<PlayerId, number> = Object.fromEntries(
+      this.players.map((player) => [player, 0]),
+    );
+
+    this.pastRoundScores.forEach((roundScore) => {
+      this.players.forEach((player) => {
+        scores[player]! += roundScore[player]!;
+      });
+    });
+
+    return scores;
+  }
+
+  endCurrentRound() {
+    if (!this.currentRound) {
+      throw Error("no current round");
+    }
+
+    this.pastRoundScores.push(this.currentRound.getScores());
     this.currentRound = null;
+  }
+
+  private startNewNumbersRound() {
+    if (!this.parameters.numbersParameters) {
+      throw Error("Cannot start Numbers round without Numbers parameters");
+    }
+    this.currentRound = NumbersRound.initialize(this.players, {
+      ...this.parameters.numbersParameters,
+      duration: this.parameters.roundDuration,
+    });
+  }
+
+  private startNewWordsRound() {
+    if (!this.parameters.wordsParameters) {
+      throw Error("Cannot start Words round without Words parameters");
+    }
+    this.currentRound = WordsRound.initialize(this.players, {
+      ...this.parameters.wordsParameters,
+      duration: this.parameters.roundDuration,
+    });
+  }
+
+  startNewRound() {
+    const roundNumber = this.pastRoundScores.length;
+    if (roundNumber >= this.parameters.roundCount) {
+      throw Error("Game is over, cannot start a new round");
+    }
+
+    switch (this.parameters.gameMode) {
+      case "numbers":
+        this.startNewNumbersRound();
+        break;
+      case "words":
+        this.startNewWordsRound();
+        break;
+      case "mixed":
+        // Games start with a Words round, then alternate between Words and Numbers
+        if (roundNumber % 2) {
+          this.startNewWordsRound();
+        } else {
+          this.startNewNumbersRound();
+        }
+    }
   }
 }

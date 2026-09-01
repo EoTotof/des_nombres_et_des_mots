@@ -12,11 +12,6 @@ export function isOperator(token: Token): token is Operator {
   return typeof token === "string";
 }
 
-export type NumbersRound = {
-  target: number;
-  tiles: NumberTile[];
-};
-
 export type NumbersRoundParameters = {
   bigNumberCount: number | null;
   allowUnreachableTarget: boolean;

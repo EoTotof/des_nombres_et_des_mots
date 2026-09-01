@@ -1,12 +1,14 @@
 import { GameRound } from "../game.round";
 import { PlayerId, RoundScore } from "../game.types";
-import { WordsGameState } from "../../words";
+import { WordsGameState, WordsRoundParameters } from "../../words";
 
 export class WordsRound extends GameRound<WordsGameState, string> {
   static initialize(
     playerIds: PlayerId[],
-    initialGameState: WordsGameState,
+    parameters: WordsRoundParameters,
   ): WordsRound {
+    const initialGameState = WordsGameState.initializeGame(parameters);
+
     return new WordsRound(
       initialGameState,
       Object.fromEntries(
@@ -37,7 +39,7 @@ export class WordsRound extends GameRound<WordsGameState, string> {
 
     for (const [player, gameState] of Object.entries(this.playerStates)) {
       const playerLongestWordLength = gameState.longestWordLength;
-      const playerLongestWordsCount = gameState.longestWords.length;
+      const playerLongestWordsCount = gameState.longestWordsCount;
 
       scores[player] = playerLongestWordLength;
 

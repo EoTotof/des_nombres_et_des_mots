@@ -52,6 +52,10 @@ export class WordsGameState {
     return this.words.filter((word) => word.length === bestWordLength);
   }
 
+  get longestWordsCount(): number {
+    return this.longestWords.length;
+  }
+
   validateWord(word: LetterTile[] | string): LetterTile[] {
     const wordAsString =
       typeof word === "string"

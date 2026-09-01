@@ -2,6 +2,7 @@ import { GameRound } from "../game.round";
 import { PlayerId, RoundScore } from "../game.types";
 import { NumbersGameState } from "../../numbers/numbers.game-state";
 import { Operation } from "../../numbers/numbers.operation";
+import { NumbersRoundParameters } from "../../numbers";
 
 const SOLUTION_SCORE = 10;
 const TARGET_REACHED_SCORE = 9;
@@ -10,8 +11,10 @@ const TARGET_NOT_REACHED_SCORE = 7;
 export class NumbersRound extends GameRound<NumbersGameState, Operation> {
   static initialize(
     playerIds: PlayerId[],
-    initialGameState: NumbersGameState,
+    parameters: NumbersRoundParameters,
   ): NumbersRound {
+    const initialGameState = NumbersGameState.initializeGame(parameters);
+
     return new NumbersRound(
       initialGameState,
       Object.fromEntries(
@@ -30,13 +33,17 @@ export class NumbersRound extends GameRound<NumbersGameState, Operation> {
     gameState.pushOperation(operation);
   }
 
+  getSolvedGameState(): NumbersGameState {
+    return this.initialState.getSolvedGameState();
+  }
+
   getScores(): RoundScore {
     // Numbers round scoring
     //  - 10 points if best attempt equivalent to game solution (target reached or as close as possible, in minimal amount of operations)
     //  - if no one has found the best solution, 9 points if target reached by best player
     //  - if no one has found the solution and no one has reached target, 7 points for best attempt among players
     //  - decrement score for the following players, handling ties, capping score with previous rules
-    const solution = this.initialState.getSolvedGameState();
+    const solution = this.getSolvedGameState();
 
     const rankedPlayers: [PlayerId, NumbersGameState][] = Object.entries(
       this.playerStates,
@@ -51,34 +58,38 @@ export class NumbersRound extends GameRound<NumbersGameState, Operation> {
     let currentScore: number = SOLUTION_SCORE;
     let tieCount = 0;
 
-    let previousGameState: NumbersGameState = solution;
+    let previousGameState: NumbersGameState | null = null;
 
     for (const [player, gameState] of rankedPlayers) {
       const hasSolution =
         solution.distanceToTarget === gameState.distanceToTarget &&
         solution.operationCount === gameState.operationCount;
 
+      const isTie =
+        previousGameState &&
+        previousGameState.distanceToTarget === gameState.distanceToTarget &&
+        previousGameState.operationCount === gameState.operationCount;
+
+      if (previousGameState) {
+        tieCount++;
+      }
+
+      if (!isTie) {
+        // Attempt is not as good as previous players; reset tie count and decrement score by that amount
+        currentScore -= tieCount;
+        tieCount = 0;
+      }
+
+      previousGameState = gameState;
+
       if (hasSolution) {
         scores[player] = SOLUTION_SCORE;
-        currentScore--;
         continue;
       }
 
       if (currentScore <= 0) {
         scores[player] = 0;
         continue;
-      }
-
-      const isTie =
-        previousGameState &&
-        previousGameState.distanceToTarget === gameState.distanceToTarget &&
-        previousGameState.operationCount === gameState.operationCount;
-
-      tieCount++;
-      if (!isTie) {
-        // Attempt is not as good as previous players; reset tie count and decrement score by that amount
-        currentScore -= tieCount;
-        tieCount = 0;
       }
 
       const hasReachedTarget =
@@ -90,8 +101,6 @@ export class NumbersRound extends GameRound<NumbersGameState, Operation> {
         currentScore = Math.min(currentScore, TARGET_NOT_REACHED_SCORE);
         scores[player] = currentScore;
       }
-
-      previousGameState = gameState;
     }
 
     return scores;

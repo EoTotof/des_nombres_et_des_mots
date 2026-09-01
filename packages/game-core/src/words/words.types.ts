@@ -31,10 +31,6 @@ export type LetterTile = {
   letter: Letter;
 };
 
-export type WordsRound = {
-  tiles: LetterTile[];
-};
-
 export type WordsRoundParameters = {
   vowelCount: number | null;
   duration: number | null;

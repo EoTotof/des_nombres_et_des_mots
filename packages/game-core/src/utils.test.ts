@@ -1,7 +1,12 @@
 // AI-generated tests
 
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { popRandomValueFromArray, popNRandomValuesFromArray } from ".";
+import {
+  popRandomValueFromArray,
+  popNRandomValuesFromArray,
+  pickRandomValueFromArray,
+  pickNRandomValuesFromArray,
+} from ".";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -90,5 +95,70 @@ describe("popNRandomValuesFromArray", () => {
     expect(values).toEqual([]);
     expect(remaining).toEqual([1, 2, 3]);
     expect(array).toBe(remaining);
+  });
+});
+
+describe("pickRandomValueFromArray", () => {
+  it("throws if the array is empty", () => {
+    expect(() => pickRandomValueFromArray([])).toThrow("Array is empty");
+  });
+
+  it("returns a random value without modifying the array", () => {
+    const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0.5);
+
+    const array = [1, 2, 3, 4];
+
+    const value = pickRandomValueFromArray(array);
+
+    expect(randomSpy).toHaveBeenCalledOnce();
+    expect(value).toBe(3);
+
+    expect(array).toEqual([1, 2, 3, 4]);
+  });
+
+  it("can pick the first element", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    const array = ["a", "b", "c"];
+
+    const value = pickRandomValueFromArray(array);
+
+    expect(value).toBe("a");
+    expect(array).toEqual(["a", "b", "c"]);
+  });
+
+  it("can pick the last element", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.999999);
+
+    const array = ["a", "b", "c"];
+
+    const value = pickRandomValueFromArray(array);
+
+    expect(value).toBe("c");
+    expect(array).toEqual(["a", "b", "c"]);
+  });
+});
+
+describe("pickNRandomValuesFromArray", () => {
+  it("returns n random values without modifying the array", () => {
+    vi.spyOn(Math, "random")
+      .mockReturnValueOnce(0) // pick 1
+      .mockReturnValueOnce(0.999999); // pick 4
+
+    const array = [1, 2, 3, 4];
+
+    const values = pickNRandomValuesFromArray(2, array);
+
+    expect(values).toEqual([1, 4]);
+    expect(array).toEqual([1, 2, 3, 4]);
+  });
+
+  it("returns an empty selection when n is 0", () => {
+    const array = [1, 2, 3];
+
+    const values = pickNRandomValuesFromArray(0, array);
+
+    expect(values).toEqual([]);
+    expect(array).toEqual([1, 2, 3]);
   });
 });

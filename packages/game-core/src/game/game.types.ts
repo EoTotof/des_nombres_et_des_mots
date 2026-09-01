@@ -14,4 +14,3 @@ export type GameParameters = {
 export type PlayerId = string;
 
 export type RoundScore = Record<PlayerId, number>;
-export type CurrentRound<ModeGameState> = Record<PlayerId, ModeGameState>;
