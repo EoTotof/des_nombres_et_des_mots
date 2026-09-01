@@ -1,4 +1,4 @@
-import { Operator, NumberTile } from "./numbers.types";
+import { Operator, NumberTile } from "./numbers.types.js";
 
 export class Operation {
   left: NumberTile;

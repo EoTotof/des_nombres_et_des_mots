@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { NumbersRound } from "./numbers.round";
-import { PlayerId, RoundScore } from "../game.types";
-import { NumbersGameState } from "../../numbers";
+import { NumbersRound } from "./numbers.round.js";
+import { PlayerId, RoundScore } from "../game.types.js";
+import { NumbersGameState } from "../../numbers/index.js";
 
 function getMockGameState(
   distanceToTarget: number,

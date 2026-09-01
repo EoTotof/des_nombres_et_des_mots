@@ -25,7 +25,7 @@ const eslintConfig = defineConfig(
       "no-console": "warn",
       "@typescript-eslint/no-unused-vars": [
         "error",
-        { argsIgnorePattern: "^_" },
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
       ],
     },
   },

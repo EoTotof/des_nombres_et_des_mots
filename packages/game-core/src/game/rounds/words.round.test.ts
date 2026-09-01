@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { PlayerId, RoundScore } from "../game.types";
-import { WordsGameState } from "../../words";
-import { WordsRound } from "./words.round";
+import { PlayerId, RoundScore } from "../game.types.js";
+import { WordsGameState } from "../../words/index.js";
+import { WordsRound } from "./words.round.js";
 
 function getMockGameState(
   longestWordLength: number,

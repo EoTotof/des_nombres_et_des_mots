@@ -6,7 +6,7 @@ import {
   popNRandomValuesFromArray,
   pickRandomValueFromArray,
   pickNRandomValuesFromArray,
-} from ".";
+} from "./index.js";
 
 afterEach(() => {
   vi.restoreAllMocks();

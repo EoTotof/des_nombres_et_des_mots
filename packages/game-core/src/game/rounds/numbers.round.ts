@@ -1,8 +1,8 @@
-import { GameRound } from "../game.round";
-import { PlayerId, RoundScore } from "../game.types";
-import { NumbersGameState } from "../../numbers/numbers.game-state";
-import { Operation } from "../../numbers/numbers.operation";
-import { NumbersRoundParameters } from "../../numbers";
+import { GameRound } from "../game.round.js";
+import { PlayerId, RoundScore } from "../game.types.js";
+import { NumbersGameState } from "../../numbers/numbers.game-state.js";
+import { Operation } from "../../numbers/numbers.operation.js";
+import { NumbersRoundParameters } from "../../numbers/index.js";
 
 const SOLUTION_SCORE = 10;
 const TARGET_REACHED_SCORE = 9;

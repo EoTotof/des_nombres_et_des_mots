@@ -4,7 +4,7 @@
   "description": "",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",  
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "build": "nest build",
@@ -30,7 +30,8 @@
     "@nestjs/websockets": "^11.2.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.3",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

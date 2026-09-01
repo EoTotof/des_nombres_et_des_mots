@@ -1,6 +1,6 @@
-import lettersFrequency from "../data/fr/letters-frequency.json";
-import { pickNRandomValuesFromArray } from "../utils";
-import { Letter, LetterTile } from "./words.types";
+import lettersFrequency from "../data/fr/letters-frequency.json" with { type: "json" };
+import { pickNRandomValuesFromArray } from "../utils.js";
+import { Letter, LetterTile } from "./words.types.js";
 
 export const LETTER_COUNT = 10;
 

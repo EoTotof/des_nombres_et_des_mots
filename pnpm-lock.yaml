@@ -331,6 +331,9 @@ importers:
       socket.io:
         specifier: ^4.8.3
         version: 4.8.3(supports-color@8.1.1)
+      uuid:
+        specifier: ^14.0.2
+        version: 14.0.2
     devDependencies:
       '@nestjs/cli':
         specifier: ^11.0.0
@@ -375,7 +378,11 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
 
-  packages/game-contracts: {}
+  packages/game-contracts:
+    dependencies:
+      '@dnedm/game-core':
+        specifier: workspace:*
+        version: link:../game-core
 
   packages/game-core: {}
 
@@ -4853,6 +4860,10 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  uuid@14.0.2:
+    resolution: {integrity: sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==}
+    hasBin: true
 
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -9999,6 +10010,8 @@ snapshots:
       react: 19.2.4
 
   util-deprecate@1.0.2: {}
+
+  uuid@14.0.2: {}
 
   v8-compile-cache-lib@3.0.1: {}
 

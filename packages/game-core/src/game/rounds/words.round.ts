@@ -1,6 +1,6 @@
-import { GameRound } from "../game.round";
-import { PlayerId, RoundScore } from "../game.types";
-import { WordsGameState, WordsRoundParameters } from "../../words";
+import { GameRound } from "../game.round.js";
+import { PlayerId, RoundScore } from "../game.types.js";
+import { WordsGameState, WordsRoundParameters } from "../../words/index.js";
 
 export class WordsRound extends GameRound<WordsGameState, string> {
   static initialize(

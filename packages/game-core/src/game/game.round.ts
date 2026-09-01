@@ -1,4 +1,4 @@
-import { PlayerId, RoundScore } from "./game.types";
+import { PlayerId, RoundScore } from "./game.types.js";
 
 interface CloneableGameState {
   clone(): this;

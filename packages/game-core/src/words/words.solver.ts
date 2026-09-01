@@ -1,5 +1,5 @@
-import rawAnagrams from "../data/fr/anagrams.json";
-import { WordsGameState } from "./words.game-state";
+import rawAnagrams from "../data/fr/anagrams.json" with { type: "json" };
+import { WordsGameState } from "./words.game-state.js";
 
 const anagrams = rawAnagrams as Record<string, string[]>;
 

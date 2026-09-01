@@ -1,5 +1,5 @@
-import { popNRandomValuesFromArray } from "../utils";
-import { NumberTile } from "./numbers.types";
+import { popNRandomValuesFromArray } from "../utils.js";
+import { NumberTile } from "./numbers.types.js";
 
 const SMALL_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const SMALL_NUMBERS_POOL = [...SMALL_NUMBERS, ...SMALL_NUMBERS];

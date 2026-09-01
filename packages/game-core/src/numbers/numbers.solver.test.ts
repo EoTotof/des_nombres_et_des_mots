@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { solve } from "./numbers.solver";
-import { NumberTile } from "./numbers.types";
-import { NumbersGameState } from "..";
+import { solve } from "./numbers.solver.js";
+import { NumberTile } from "./numbers.types.js";
+import { NumbersGameState } from "../index.js";
 
 function tile(id: string, value: number): NumberTile {
   return {

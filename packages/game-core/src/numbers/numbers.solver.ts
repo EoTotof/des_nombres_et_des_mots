@@ -1,6 +1,6 @@
-import { NumbersGameState } from "./numbers.game-state";
-import { Operation } from "./numbers.operation";
-import { NumberTile } from "./numbers.types";
+import { NumbersGameState } from "./numbers.game-state.js";
+import { Operation } from "./numbers.operation.js";
+import { NumberTile } from "./numbers.types.js";
 
 export function solve(gameState: NumbersGameState): NumbersGameState {
   const initialTiles = gameState.initialTiles;

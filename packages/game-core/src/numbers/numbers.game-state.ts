@@ -2,10 +2,10 @@ import {
   BIG_NUMBERS_POOL,
   generateInitialNumberTiles,
   generateTargetNumber,
-} from "./numbers.generator";
-import { Operation } from "./numbers.operation";
-import { solve } from "./numbers.solver";
-import { NumbersRoundParameters, NumberTile } from "./numbers.types";
+} from "./numbers.generator.js";
+import { Operation } from "./numbers.operation.js";
+import { solve } from "./numbers.solver.js";
+import { NumbersRoundParameters, NumberTile } from "./numbers.types.js";
 
 export const DEFAULT_NUMBERS_ROUND_PARAMETERS: NumbersRoundParameters = {
   bigNumberCount: 2,

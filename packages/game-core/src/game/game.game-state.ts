@@ -1,6 +1,20 @@
-import { GameParameters, PlayerId, RoundScore } from "./game.types";
-import { NumbersRound } from "./rounds/numbers.round";
-import { WordsRound } from "./rounds/words.round";
+import { DEFAULT_NUMBERS_ROUND_PARAMETERS } from "../numbers/index.js";
+import { DEFAULT_WORDS_ROUND_PARAMETERS } from "../words/index.js";
+import { GameParameters, PlayerId, RoundScore } from "./game.types.js";
+import { NumbersRound, WordsRound } from "./rounds/index.js";
+
+const { duration: _nd, ...defaultNumbersParameters } =
+  DEFAULT_NUMBERS_ROUND_PARAMETERS;
+const { duration: _wd, ...defaultWordsParameters } =
+  DEFAULT_WORDS_ROUND_PARAMETERS;
+
+export const DEFAULT_GAME_PARAMETERS: GameParameters = {
+  roundCount: 10,
+  roundDuration: 60,
+  gameMode: "mixed",
+  numbersParameters: defaultNumbersParameters,
+  wordsParameters: defaultWordsParameters,
+};
 
 export class GameState {
   parameters: GameParameters;

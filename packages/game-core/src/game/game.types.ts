@@ -1,5 +1,5 @@
-import { NumbersRoundParameters } from "../numbers";
-import { WordsRoundParameters } from "../words";
+import { NumbersRoundParameters } from "../numbers/index.js";
+import { WordsRoundParameters } from "../words/index.js";
 
 type GameMode = "numbers" | "words" | "mixed";
 

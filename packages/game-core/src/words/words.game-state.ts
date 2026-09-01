@@ -1,6 +1,6 @@
-import { generateInitialLetterTiles } from "./words.generator";
-import { solve, wordIsValid } from "./words.solver";
-import { WordsRoundParameters, LetterTile } from "./words.types";
+import { generateInitialLetterTiles } from "./words.generator.js";
+import { solve, wordIsValid } from "./words.solver.js";
+import { WordsRoundParameters, LetterTile } from "./words.types.js";
 
 export const DEFAULT_WORDS_ROUND_PARAMETERS: WordsRoundParameters = {
   vowelCount: 5,
