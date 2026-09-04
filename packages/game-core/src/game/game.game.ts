@@ -1,6 +1,9 @@
-import { DEFAULT_NUMBERS_ROUND_PARAMETERS } from "../numbers/index.js";
+import {
+  DEFAULT_NUMBERS_ROUND_PARAMETERS,
+  Operation,
+} from "../numbers/index.js";
 import { DEFAULT_WORDS_ROUND_PARAMETERS } from "../words/index.js";
-import { GameParameters, PlayerId, RoundScore } from "./game.types.js";
+import { GameParameters, Move, PlayerId, RoundScore } from "./game.types.js";
 import { NumbersRound, WordsRound } from "./rounds/index.js";
 
 const { duration: _nd, ...defaultNumbersParameters } =
@@ -16,26 +19,29 @@ export const DEFAULT_GAME_PARAMETERS: GameParameters = {
   wordsParameters: defaultWordsParameters,
 };
 
-export class GameState {
+export class Game {
   parameters: GameParameters;
   players: PlayerId[];
   pastRoundScores: RoundScore[];
+  previousRound: NumbersRound | WordsRound | null;
   currentRound: NumbersRound | WordsRound | null;
 
   constructor(
     parameters: GameParameters,
     players: PlayerId[],
     pastRoundScores: RoundScore[],
+    previousRound: NumbersRound | WordsRound | null,
     currentRound: NumbersRound | WordsRound | null,
   ) {
     this.parameters = parameters;
     this.players = players;
     this.pastRoundScores = pastRoundScores;
+    this.previousRound = previousRound;
     this.currentRound = currentRound;
   }
 
   static initializeGame(parameters: GameParameters, players: PlayerId[]) {
-    return new GameState(parameters, players, [], null);
+    return new Game(parameters, players, [], null, null);
   }
 
   getCurrentGameScores() {
@@ -57,6 +63,7 @@ export class GameState {
       throw Error("no current round");
     }
 
+    this.previousRound = this.currentRound;
     this.pastRoundScores.push(this.currentRound.getScores());
     this.currentRound = null;
   }
@@ -101,6 +108,26 @@ export class GameState {
         } else {
           this.startNewNumbersRound();
         }
+    }
+  }
+
+  pushMove(player: PlayerId, move: Move) {
+    if (!this.currentRound) {
+      throw Error("no current round");
+    }
+
+    if (
+      this.currentRound instanceof NumbersRound &&
+      move instanceof Operation
+    ) {
+      this.currentRound.pushMove(player, move);
+    } else if (
+      this.currentRound instanceof WordsRound &&
+      typeof move === "string"
+    ) {
+      this.currentRound.pushMove(player, move);
+    } else {
+      throw Error("incompatible move for current round");
     }
   }
 }

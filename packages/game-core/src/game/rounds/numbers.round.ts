@@ -10,7 +10,7 @@ const TARGET_NOT_REACHED_SCORE = 7;
 
 export class NumbersRound extends GameRound<NumbersGameState, Operation> {
   static initialize(
-    playerIds: PlayerId[],
+    players: PlayerId[],
     parameters: NumbersRoundParameters,
   ): NumbersRound {
     const initialGameState = NumbersGameState.initializeGame(parameters);
@@ -18,7 +18,7 @@ export class NumbersRound extends GameRound<NumbersGameState, Operation> {
     return new NumbersRound(
       initialGameState,
       Object.fromEntries(
-        playerIds.map((playerId) => [playerId, initialGameState.clone()]),
+        players.map((playerId) => [playerId, initialGameState.clone()]),
       ),
     );
   }

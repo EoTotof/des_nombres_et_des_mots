@@ -4,7 +4,7 @@ import { WordsGameState, WordsRoundParameters } from "../../words/index.js";
 
 export class WordsRound extends GameRound<WordsGameState, string> {
   static initialize(
-    playerIds: PlayerId[],
+    players: PlayerId[],
     parameters: WordsRoundParameters,
   ): WordsRound {
     const initialGameState = WordsGameState.initializeGame(parameters);
@@ -12,16 +12,16 @@ export class WordsRound extends GameRound<WordsGameState, string> {
     return new WordsRound(
       initialGameState,
       Object.fromEntries(
-        playerIds.map((playerId) => [playerId, initialGameState.clone()]),
+        players.map((playerId) => [playerId, initialGameState.clone()]),
       ),
     );
   }
 
-  pushMove(playerId: PlayerId, word: string): void {
-    const gameState = this.playerStates[playerId];
+  pushMove(player: PlayerId, word: string): void {
+    const gameState = this.playerStates[player];
 
     if (!gameState) {
-      throw new Error(`Unknown player: ${playerId}`);
+      throw new Error(`Unknown player: ${player}`);
     }
 
     gameState.pushWord(word);

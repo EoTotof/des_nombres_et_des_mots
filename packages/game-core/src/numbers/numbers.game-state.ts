@@ -57,7 +57,7 @@ export class NumbersGameState {
     }
   }
 
-  #useTiles(tiles: NumberTile[], operation: Operation): NumberTile[] {
+  private useTiles(tiles: NumberTile[], operation: Operation): NumberTile[] {
     const currentTiles = [...tiles];
 
     const leftTileIndex = currentTiles.findIndex(
@@ -83,7 +83,7 @@ export class NumbersGameState {
     let currentTiles = [...this.initialTiles];
 
     this.operations.forEach((operation) => {
-      currentTiles = this.#useTiles(currentTiles, operation);
+      currentTiles = this.useTiles(currentTiles, operation);
 
       if (operation.isValid) {
         currentTiles.push(operation.result);

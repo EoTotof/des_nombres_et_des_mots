@@ -14,7 +14,9 @@ export default function CreateGame() {
 
   return (
     <SocketContext value={socket}>
-      <button onClick={() => socket.emit(ClientEvents.Ping)}>ping</button>
+      <button onClick={() => socket.emit(ClientEvents.CreateLobby)}>
+        Créer une partie
+      </button>
     </SocketContext>
   );
 }

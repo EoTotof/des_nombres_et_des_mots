@@ -1,4 +1,4 @@
-import { NumbersRoundParameters } from "../numbers/index.js";
+import { NumbersRoundParameters, Operation } from "../numbers/index.js";
 import { WordsRoundParameters } from "../words/index.js";
 
 type GameMode = "numbers" | "words" | "mixed";
@@ -10,6 +10,8 @@ export type GameParameters = {
   numbersParameters: Omit<NumbersRoundParameters, "duration"> | null;
   wordsParameters: Omit<WordsRoundParameters, "duration"> | null;
 };
+
+export type Move = Operation | string;
 
 export type PlayerId = string;
 

@@ -6,7 +6,7 @@ interface CloneableGameState {
 
 export abstract class GameRound<TGameState extends CloneableGameState, TMove> {
   protected readonly initialState: TGameState;
-  protected readonly playerStates: Record<PlayerId, TGameState>;
+  readonly playerStates: Record<PlayerId, TGameState>;
 
   constructor(
     initialState: TGameState,
