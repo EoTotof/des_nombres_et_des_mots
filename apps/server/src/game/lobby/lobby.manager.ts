@@ -1,6 +1,7 @@
 import { PlayerId } from "@dnedm/game-core";
 import { Lobby } from "./lobby.js";
 import { ServerPayloads } from "@dnedm/game-contracts";
+import { Player } from "./lobby.types.js";
 
 const LOBBY_CLEANUP_INTERVAL = 60_000; // 1 minute
 const LOBBY_INACTIVITY_TIMEOUT = 15 * 60_000; // 15 minutes
@@ -27,7 +28,7 @@ export class LobbyManager {
     );
   }
 
-  findLobby(player: PlayerId): Lobby | null {
+  findPlayerLobby(player: PlayerId): Lobby | null {
     const lobbyId = this.playerLobbies.get(player);
     if (!lobbyId) {
       return null;
@@ -41,13 +42,21 @@ export class LobbyManager {
     return lobby;
   }
 
-  createLobby(ownerId: PlayerId): Lobby {
-    if (this.playerLobbies.has(ownerId)) {
+  createLobby(owner: Player): Lobby {
+    if (this.playerLobbies.has(owner.id)) {
       throw new Error("Player is already in a lobby");
     }
-    const lobby = new Lobby(ownerId, this.dispatchToPlayer);
+    const lobby = new Lobby(owner, this.dispatchToPlayer);
     this.lobbies.set(lobby.id, lobby);
-    this.playerLobbies.set(ownerId, lobby.id);
+    this.playerLobbies.set(owner.id, lobby.id);
+    return lobby;
+  }
+
+  getLobby(lobbyId: string): Lobby {
+    const lobby = this.lobbies.get(lobbyId);
+    if (!lobby) {
+      throw Error("Lobby does not exist");
+    }
     return lobby;
   }
 
@@ -70,8 +79,8 @@ export class LobbyManager {
       return;
     }
 
-    for (const playerId of lobby.players) {
-      this.playerLobbies.delete(playerId);
+    for (const player of lobby.players) {
+      this.playerLobbies.delete(player.id);
     }
 
     this.lobbies.delete(lobbyId);

@@ -1,13 +1,13 @@
-import { NumberTile, Operator, PlayerId } from "@dnedm/game-core";
+import { NumberTile, Operator } from "@dnedm/game-core";
 
 export type NumbersRoundPayload = {
   type: "numbers";
-  playerStates: Record<PlayerId, NumbersGamePayload>;
+  playerStates: Record<string, NumbersGamePayload>;
 };
 
 export type ObfuscatedNumbersRoundPayload = {
   type: "numbers";
-  playerStates: Record<PlayerId, ObfuscatedNumbersGamePayload>;
+  playerStates: Record<string, ObfuscatedNumbersGamePayload>;
   currentPlayerState: NumbersGamePayload;
 };
 

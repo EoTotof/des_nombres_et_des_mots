@@ -1,14 +1,21 @@
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { ClientEvents, ServerEvents } from "@dnedm/game-contracts";
+import {
+  ClientEvents,
+  ClientPayloads,
+  ServerEvents,
+} from "@dnedm/game-contracts";
 import { randomUUID } from "crypto";
 import type { PlayerSocket } from "../socket/socket.types.js";
 import { LobbyManager } from "./lobby/lobby.manager.js";
+import { Player } from "./lobby/lobby.types.js";
 
 @WebSocketGateway({
   path: "/wsapi",
@@ -37,7 +44,7 @@ export class GameGateway implements OnGatewayConnection {
       socket.data.playerId = playerId;
       await socket.join(`player:${playerId}`);
 
-      const existingLobby = this.lobbyManager.findLobby(playerId);
+      const existingLobby = this.lobbyManager.findPlayerLobby(playerId);
       if (existingLobby) {
         // Reconnection, send lobby state to player to resync their client
         existingLobby.dispatchStateToPlayer(playerId);
@@ -50,12 +57,39 @@ export class GameGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage(ClientEvents.CreateLobby)
-  onCreateLobby(socket: PlayerSocket): void {
+  onCreateLobby(
+    @ConnectedSocket() socket: PlayerSocket,
+    @MessageBody() payload: ClientPayloads[ClientEvents.CreateLobby],
+  ): void {
     if (!socket.data.playerId) {
       throw Error("socket.data.playerId should be defined");
     }
-    const lobby = this.lobbyManager.createLobby(socket.data.playerId);
-    lobby.addPlayer(socket.data.playerId);
+
+    const player: Player = {
+      id: socket.data.playerId,
+      name: payload.name,
+    };
+
+    const lobby = this.lobbyManager.createLobby(player);
+    lobby.addPlayer(player);
+  }
+
+  @SubscribeMessage(ClientEvents.JoinLobby)
+  onJoinLobby(
+    @ConnectedSocket() socket: PlayerSocket,
+    @MessageBody() payload: ClientPayloads[ClientEvents.JoinLobby],
+  ): void {
+    if (!socket.data.playerId) {
+      throw Error("socket.data.playerId should be defined");
+    }
+
+    const player: Player = {
+      id: socket.data.playerId,
+      name: payload.name,
+    };
+
+    const lobby = this.lobbyManager.getLobby(payload.lobbyId);
+    lobby.addPlayer(player);
   }
 
   @SubscribeMessage(ClientEvents.Ping)

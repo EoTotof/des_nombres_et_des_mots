@@ -1,13 +1,13 @@
-import { LetterTile, PlayerId } from "@dnedm/game-core";
+import { LetterTile } from "@dnedm/game-core";
 
 export type WordsRoundPayload = {
   type: "words";
-  playerStates: Record<PlayerId, WordsGamePayload>;
+  playerStates: Record<string, WordsGamePayload>;
 };
 
 export type ObfuscatedWordsRoundPayload = {
   type: "words";
-  playerStates: Record<PlayerId, ObfuscatedWordsGamePayload>;
+  playerStates: Record<string, ObfuscatedWordsGamePayload>;
   currentPlayerState: WordsGamePayload;
 };
 
