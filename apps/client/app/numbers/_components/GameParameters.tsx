@@ -32,6 +32,36 @@ export default function GameParameters({
           }
         />
       </div>
+      <RoundParameters
+        parameters={parameters}
+        setParameters={(roundParameters) =>
+          setParameters({
+            duration: parameters.duration,
+            ...roundParameters,
+          })
+        }
+      />
+      <div
+        className="cursor-pointer font-semibold"
+        onClick={() => setParameters(DEFAULT_NUMBERS_ROUND_PARAMETERS)}
+      >
+        Rétablir les valeurs par défaut
+      </div>
+    </div>
+  );
+}
+
+export function RoundParameters({
+  parameters,
+  setParameters,
+  disabled,
+}: {
+  parameters: Omit<NumbersRoundParameters, "duration">;
+  setParameters: (parameters: Omit<NumbersRoundParameters, "duration">) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <>
       <div className="md:flex md:items-center">
         <label className="md:w-280">Grands nombres</label>
         <Slider
@@ -47,6 +77,7 @@ export default function GameParameters({
           onChange={(value) =>
             setParameters({ ...parameters, bigNumberCount: value })
           }
+          disabled={disabled}
         />
       </div>
       <div className="md:flex md:items-center">
@@ -60,15 +91,10 @@ export default function GameParameters({
                 allowUnreachableTarget: enabled,
               })
             }
+            disabled={disabled}
           />
         </div>
       </div>
-      <div
-        className="cursor-pointer font-semibold"
-        onClick={() => setParameters(DEFAULT_NUMBERS_ROUND_PARAMETERS)}
-      >
-        Rétablir les valeurs par défaut
-      </div>
-    </div>
+    </>
   );
 }

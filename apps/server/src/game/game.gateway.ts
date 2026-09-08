@@ -92,6 +92,26 @@ export class GameGateway implements OnGatewayConnection {
     lobby.addPlayer(player);
   }
 
+  @SubscribeMessage(ClientEvents.UpdateGameParameters)
+  onUpdateGameParameters(
+    @ConnectedSocket() socket: PlayerSocket,
+    @MessageBody() payload: ClientPayloads[ClientEvents.UpdateGameParameters],
+  ): void {
+    if (!socket.data.playerId) {
+      throw Error("socket.data.playerId should be defined");
+    }
+
+    const lobby = this.lobbyManager.findPlayerLobby(socket.data.playerId);
+    if (!lobby) {
+      throw Error("Player is not in a lobby");
+    }
+    if (lobby.owner !== socket.data.playerId) {
+      throw Error("Unauthorized: player is not the owner of the lobby");
+    }
+
+    lobby.gameInstanceManager.setGameParameters(payload);
+  }
+
   @SubscribeMessage(ClientEvents.Ping)
   onPing(socket: Socket): void {
     socket.emit(ServerEvents.Pong, {

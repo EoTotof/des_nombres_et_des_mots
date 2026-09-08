@@ -7,8 +7,8 @@ export type GameParameters = {
   roundCount: number;
   roundDuration: number;
   gameMode: GameMode;
-  numbersParameters: Omit<NumbersRoundParameters, "duration"> | null;
-  wordsParameters: Omit<WordsRoundParameters, "duration"> | null;
+  numbersParameters: Omit<NumbersRoundParameters, "duration">;
+  wordsParameters: Omit<WordsRoundParameters, "duration">;
 };
 
 export type Move = Operation | string;

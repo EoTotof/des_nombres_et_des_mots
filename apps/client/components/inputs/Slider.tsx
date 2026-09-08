@@ -4,12 +4,14 @@ type SliderProps<T> = {
   value: T;
   options: { label: string; value: T }[];
   onChange: (value: T) => void;
+  disabled?: boolean;
 };
 
 export default function Slider<T>({
   value,
   options,
   onChange,
+  disabled,
 }: SliderProps<T>) {
   const currentIndex = options.findIndex((option) => option.value === value);
 
@@ -26,6 +28,7 @@ export default function Slider<T>({
         onChange(options[index].value);
       }}
       className={"flex-1 flex gap-32 items-center"}
+      disabled={disabled}
     >
       <BaseUISlider.Control className="flex-1 flex h-16 w-full items-center">
         <BaseUISlider.Track className="relative h-8 w-full rounded-full bg-gray-300">

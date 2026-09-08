@@ -31,6 +31,11 @@ export class GameInstanceManager {
     return new GameInstanceManager(parameters, null, onEvent);
   }
 
+  public setGameParameters(parameters: GameParameters) {
+    this.gameParameters = parameters;
+    this.onStateChange();
+  }
+
   private startRound(): void {
     if (!this.gameInstance) {
       throw new Error("Game has not started");

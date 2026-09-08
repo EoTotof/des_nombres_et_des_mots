@@ -6,8 +6,9 @@ export type ServerPayloads = {
   [ServerEvents.LobbyState]: {
     lobbyId: string;
     playerId: PlayerId;
+    playerName: string;
     parameters: GameParameters;
-    owner: PlayerId;
+    owner: string;
     players: string[]; // IDs are private, these are the players' names
     gameState: GamePayload | null;
   };

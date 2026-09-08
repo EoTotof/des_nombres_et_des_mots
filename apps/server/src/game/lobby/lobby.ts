@@ -83,6 +83,7 @@ export class Lobby {
     return {
       lobbyId: this.id,
       playerId,
+      playerName: getPlayerFromPlayerId(playerId, this.players).name,
       parameters: this.gameInstanceManager.gameParameters,
       owner: getPlayerFromPlayerId(this.owner, this.players).name,
       players: this.players.map(({ name }) => name),

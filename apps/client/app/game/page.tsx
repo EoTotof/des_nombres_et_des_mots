@@ -1,16 +1,12 @@
 "use client";
 
-import {
-  ClientEvents,
-  ServerEvents,
-  ServerPayloads,
-} from "@dnedm/game-contracts";
+import { ServerEvents, ServerPayloads } from "@dnedm/game-contracts";
 import { useLocalStorageValue } from "@react-hookz/web";
 import { PlayerId } from "@dnedm/game-core";
-import Button from "@/components/Button";
 import { useSocket } from "./_hooks/useSocket";
 import { useEffect, useState } from "react";
 import LobbyMenu from "./_components/LobbyMenu";
+import LobbyPage from "./_components/Lobby/LobbyPage";
 
 export default function Game() {
   const { value: playerId, set: setPlayerId } =
@@ -19,6 +15,8 @@ export default function Game() {
       initializeWithValue: true,
     });
 
+  const [connected, setConnected] = useState<boolean>(false);
+
   const [lobbyState, setLobbyState] = useState<
     ServerPayloads[ServerEvents.LobbyState] | null
   >(null);
@@ -26,6 +24,12 @@ export default function Game() {
   const socket = useSocket(playerId, setPlayerId);
 
   useEffect(() => {
+    const onConnect = () => setConnected(true);
+    socket.on("connect", onConnect);
+
+    const onDisconnect = () => setConnected(false);
+    socket.on("disconnect", onDisconnect);
+
     if (!socket.connected) {
       socket.connect();
     }
@@ -36,30 +40,21 @@ export default function Game() {
 
     socket.on(ServerEvents.LobbyState, onLobbyState);
 
+    socket.on("disconnect", () => setConnected(false));
     return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
       socket.off(ServerEvents.LobbyState, onLobbyState);
     };
   }, [socket]);
 
-  //if (!socket.connected) {
-  //  return <div>Chargement...</div>;
-  //}
+  if (!connected) {
+    return <div>Chargement...</div>;
+  }
 
   if (lobbyState === null) {
     return <LobbyMenu socket={socket} />;
   }
 
-  return (
-    <div>
-      <div>lobby ID: {lobbyState.lobbyId}</div>
-      <div>lobby owner: {lobbyState.owner}</div>
-      <div>
-        <ul>
-          {lobbyState.players.map((name) => (
-            <li key={name}>{name}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+  return <LobbyPage socket={socket} lobbyState={lobbyState} />;
 }

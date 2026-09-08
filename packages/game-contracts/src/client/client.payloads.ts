@@ -1,3 +1,4 @@
+import { GameParameters } from "@dnedm/game-core";
 import { ClientEvents } from "./client.events.js";
 
 export type ClientPayloads = {
@@ -8,4 +9,5 @@ export type ClientPayloads = {
     lobbyId: string;
     name: string;
   };
+  [ClientEvents.UpdateGameParameters]: GameParameters;
 };
