@@ -20,17 +20,26 @@ export class NumbersRound extends GameRound<NumbersGameState, Operation> {
       Object.fromEntries(
         players.map((playerId) => [playerId, initialGameState.clone()]),
       ),
+      Object.fromEntries(
+        players.map((playerId) => [playerId, initialGameState.clone()]),
+      ),
     );
   }
 
   pushMove(playerId: PlayerId, operation: Operation): void {
     const gameState = this.playerStates[playerId];
+    const bestAttempt = this.playerBestAttempts[playerId];
 
-    if (!gameState) {
+    if (!gameState || !bestAttempt) {
       throw new Error(`Unknown player: ${playerId}`);
     }
 
-    gameState.pushOperation(operation);
+    const updatedGameState = gameState.pushOperation(operation);
+    this.playerStates[playerId] = updatedGameState;
+    this.playerBestAttempts[playerId] = NumbersGameState.getBestAttempt(
+      bestAttempt,
+      updatedGameState,
+    );
   }
 
   getSolvedGameState(): NumbersGameState {
@@ -46,7 +55,7 @@ export class NumbersRound extends GameRound<NumbersGameState, Operation> {
     const solution = this.getSolvedGameState();
 
     const rankedPlayers: [PlayerId, NumbersGameState][] = Object.entries(
-      this.playerStates,
+      this.playerBestAttempts,
     ).toSorted(([, gameStateA], [, gameStateB]) => {
       if (gameStateA.distanceToTarget === gameStateB.distanceToTarget) {
         return gameStateA.operationCount - gameStateB.operationCount;

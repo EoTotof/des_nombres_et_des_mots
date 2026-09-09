@@ -2,6 +2,7 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -14,24 +15,27 @@ import {
 } from "@dnedm/game-contracts";
 import { randomUUID } from "crypto";
 import type { PlayerSocket } from "../socket/socket.types.js";
-import { LobbyManager } from "./lobby/lobby.manager.js";
 import { Player } from "./lobby/lobby.types.js";
+import { UseGuards } from "@nestjs/common";
+import { IsLobbyOwnerGuard } from "./game.guards.js";
+import { LobbyService } from "./lobby/lobby.service.js";
 
 @WebSocketGateway({
   path: "/wsapi",
   transports: ["websocket"],
 })
-export class GameGateway implements OnGatewayConnection {
+export class GameGateway implements OnGatewayConnection, OnGatewayInit {
   @WebSocketServer()
   private readonly server!: Server;
-  private readonly lobbyManager: LobbyManager;
 
-  constructor() {
-    this.lobbyManager = new LobbyManager((playerId, payload) =>
+  constructor(private readonly lobbyService: LobbyService) {}
+
+  afterInit() {
+    this.lobbyService.initialize((playerId, payload) => {
       this.server
         .to(`player:${playerId}`)
-        .emit(ServerEvents.LobbyState, payload),
-    );
+        .emit(ServerEvents.LobbyState, payload);
+    });
   }
 
   async handleConnection(socket: PlayerSocket) {
@@ -44,7 +48,7 @@ export class GameGateway implements OnGatewayConnection {
       socket.data.playerId = playerId;
       await socket.join(`player:${playerId}`);
 
-      const existingLobby = this.lobbyManager.findPlayerLobby(playerId);
+      const existingLobby = this.lobbyService.manager.findPlayerLobby(playerId);
       if (existingLobby) {
         // Reconnection, send lobby state to player to resync their client
         existingLobby.dispatchStateToPlayer(playerId);
@@ -70,7 +74,7 @@ export class GameGateway implements OnGatewayConnection {
       name: payload.name,
     };
 
-    const lobby = this.lobbyManager.createLobby(player);
+    const lobby = this.lobbyService.manager.createLobby(player);
     lobby.addPlayer(player);
   }
 
@@ -88,28 +92,29 @@ export class GameGateway implements OnGatewayConnection {
       name: payload.name,
     };
 
-    const lobby = this.lobbyManager.getLobby(payload.lobbyId);
+    const lobby = this.lobbyService.manager.getLobby(payload.lobbyId);
     lobby.addPlayer(player);
   }
 
+  @UseGuards(IsLobbyOwnerGuard)
   @SubscribeMessage(ClientEvents.UpdateGameParameters)
   onUpdateGameParameters(
     @ConnectedSocket() socket: PlayerSocket,
     @MessageBody() payload: ClientPayloads[ClientEvents.UpdateGameParameters],
   ): void {
-    if (!socket.data.playerId) {
-      throw Error("socket.data.playerId should be defined");
-    }
+    const lobby = this.lobbyService.manager.findPlayerLobby(
+      socket.data.playerId!,
+    );
+    lobby!.updateGameParameters(payload);
+  }
 
-    const lobby = this.lobbyManager.findPlayerLobby(socket.data.playerId);
-    if (!lobby) {
-      throw Error("Player is not in a lobby");
-    }
-    if (lobby.owner !== socket.data.playerId) {
-      throw Error("Unauthorized: player is not the owner of the lobby");
-    }
-
-    lobby.gameInstanceManager.setGameParameters(payload);
+  @UseGuards(IsLobbyOwnerGuard)
+  @SubscribeMessage(ClientEvents.StartGame)
+  onStartGame(@ConnectedSocket() socket: PlayerSocket): void {
+    const lobby = this.lobbyService.manager.findPlayerLobby(
+      socket.data.playerId!,
+    );
+    lobby!.startGame();
   }
 
   @SubscribeMessage(ClientEvents.Ping)

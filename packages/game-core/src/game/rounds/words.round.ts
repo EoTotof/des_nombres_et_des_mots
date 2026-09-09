@@ -14,17 +14,18 @@ export class WordsRound extends GameRound<WordsGameState, string> {
       Object.fromEntries(
         players.map((playerId) => [playerId, initialGameState.clone()]),
       ),
+      {},
     );
   }
 
-  pushMove(player: PlayerId, word: string): void {
-    const gameState = this.playerStates[player];
+  pushMove(playerId: PlayerId, word: string): void {
+    const gameState = this.playerStates[playerId];
 
     if (!gameState) {
-      throw new Error(`Unknown player: ${player}`);
+      throw new Error(`Unknown player: ${playerId}`);
     }
 
-    gameState.pushWord(word);
+    this.playerStates[playerId] = gameState.pushWord(word);
   }
 
   getScores(): RoundScore {

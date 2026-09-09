@@ -5,7 +5,7 @@ import { useLocalStorageValue } from "@react-hookz/web";
 import { PlayerId } from "@dnedm/game-core";
 import { useSocket } from "./_hooks/useSocket";
 import { useEffect, useState } from "react";
-import LobbyMenu from "./_components/LobbyMenu";
+import GameMenu from "./_components/GameMenu";
 import LobbyPage from "./_components/Lobby/LobbyPage";
 
 export default function Game() {
@@ -53,7 +53,7 @@ export default function Game() {
   }
 
   if (lobbyState === null) {
-    return <LobbyMenu socket={socket} />;
+    return <GameMenu socket={socket} />;
   }
 
   return <LobbyPage socket={socket} lobbyState={lobbyState} />;

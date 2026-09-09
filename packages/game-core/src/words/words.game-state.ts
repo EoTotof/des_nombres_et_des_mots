@@ -44,7 +44,7 @@ export class WordsGameState {
   get longestWordLength(): number {
     return this.words
       .map((word) => word.length)
-      .reduce((acc, length) => Math.max(acc, length));
+      .reduce((acc, length) => Math.max(acc, length), 0);
   }
 
   get longestWords(): LetterTile[][] {

@@ -9,6 +9,7 @@ export type ObfuscatedNumbersRoundPayload = {
   type: "numbers";
   playerStates: Record<string, ObfuscatedNumbersGamePayload>;
   currentPlayerState: NumbersGamePayload;
+  currentBestAttempt: NumbersGamePayload;
 };
 
 export type NumbersGamePayload = {

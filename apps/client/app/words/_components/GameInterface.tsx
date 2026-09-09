@@ -14,7 +14,7 @@ type GameInterfaceProps = {
   gameState: WordsGameState;
   timer: number | null;
   updateGameState: (gameState: WordsGameState) => void;
-  onValidate: () => void;
+  onValidate?: () => void;
 };
 
 export default function GameInterface({
@@ -82,7 +82,7 @@ export default function GameInterface({
               />
             </div>
           ) : null}
-          {gameState.words.length > 0 && (
+          {gameState.words.length > 0 && onValidate && (
             <div className="mt-64 flex flex-col items-center">
               <Button className="mt-16" onClick={onValidate}>
                 Valider

@@ -9,4 +9,5 @@ export interface ClientToServerEvents {
   [ClientEvents.UpdateGameParameters]: (
     payload: ClientPayloads[ClientEvents.UpdateGameParameters],
   ) => void;
+  [ClientEvents.StartGame]: () => void;
 }

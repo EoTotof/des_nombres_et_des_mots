@@ -3,7 +3,7 @@ import { ClientEvents } from "@dnedm/game-contracts";
 import { useState } from "react";
 import { Socket } from "socket.io-client";
 
-export default function LobbyMenu({ socket }: { socket: Socket }) {
+export default function GameMenu({ socket }: { socket: Socket }) {
   const [name, setName] = useState<string>("");
   const [lobbyId, setLobbyId] = useState<string>("");
 

@@ -16,7 +16,7 @@ type GameInterfaceProps = {
   timer: number | null;
   bestAttempt: NumbersGameState | null;
   updateGameState: (gameState: NumbersGameState) => void;
-  onValidate: () => void;
+  onValidate?: () => void;
 };
 
 export default function GameInterface({
@@ -89,9 +89,11 @@ export default function GameInterface({
           {bestAttempt && (
             <div className="mt-64 flex flex-col items-center">
               <BestAttempt bestAttempt={bestAttempt} />
-              <Button className="mt-16" onClick={onValidate}>
-                Valider
-              </Button>
+              {onValidate && (
+                <Button className="mt-16" onClick={onValidate}>
+                  Valider
+                </Button>
+              )}
             </div>
           )}
         </aside>

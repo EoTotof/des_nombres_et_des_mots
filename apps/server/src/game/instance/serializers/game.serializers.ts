@@ -113,10 +113,14 @@ export function serializeCurrentRound(
   }
 
   if (currentRound instanceof NumbersRound) {
+    if (!currentRound.playerBestAttempts[playerId]) {
+      throw Error("player ID not found in playerBestAttempts");
+    }
+
     return {
       type: "numbers",
       playerStates: Object.fromEntries(
-        Object.entries(currentRound.playerStates).map(
+        Object.entries(currentRound.playerBestAttempts).map(
           ([playerId, gameState]) => [
             getPlayerFromPlayerId(playerId, players).name,
             serializeNumbersGame(gameState, true),
@@ -125,6 +129,10 @@ export function serializeCurrentRound(
       ),
       currentPlayerState: serializeNumbersGame(
         currentRound.playerStates[playerId],
+        false,
+      ),
+      currentBestAttempt: serializeNumbersGame(
+        currentRound.playerBestAttempts[playerId],
         false,
       ),
     };

@@ -271,7 +271,11 @@ describe("NumbersRound.getScores", () => {
       ]),
     );
 
-    const round = new NumbersRound(initialGameState, playerStates);
+    const round = new NumbersRound(
+      initialGameState,
+      playerStates,
+      playerStates,
+    );
     const scores = round.getScores();
     Object.entries(scores).forEach(([player, score]) =>
       expect(score).toBe(expected[player]),

@@ -14,7 +14,9 @@ export class GameInstanceManager {
   onStateChange: () => void;
 
   private roundTimer: ReturnType<typeof setTimeout> | null = null;
+  public roundEndsAt: number | null = null;
   private nextRoundTimer: ReturnType<typeof setTimeout> | null = null;
+  public nextRoundStartsAt: number | null = null;
 
   constructor(
     gameParameters: GameParameters,
@@ -45,6 +47,8 @@ export class GameInstanceManager {
 
     this.onStateChange();
 
+    this.roundEndsAt =
+      new Date().getTime() + this.gameParameters.roundDuration * 1000;
     this.roundTimer = setTimeout(() => {
       this.endRound();
     }, this.gameParameters.roundDuration * 1000);
@@ -67,6 +71,7 @@ export class GameInstanceManager {
       return;
     }
 
+    this.nextRoundStartsAt = new Date().getTime() + RESULTS_TIMER * 1000;
     this.nextRoundTimer = setTimeout(() => {
       this.startRound();
     }, RESULTS_TIMER * 1000);
@@ -90,6 +95,7 @@ export class GameInstanceManager {
     if (this.roundTimer !== null) {
       clearTimeout(this.roundTimer);
       this.roundTimer = null;
+      this.roundEndsAt = null;
     }
   }
 
@@ -97,6 +103,7 @@ export class GameInstanceManager {
     if (this.nextRoundTimer !== null) {
       clearTimeout(this.nextRoundTimer);
       this.nextRoundTimer = null;
+      this.nextRoundStartsAt = null;
     }
   }
 

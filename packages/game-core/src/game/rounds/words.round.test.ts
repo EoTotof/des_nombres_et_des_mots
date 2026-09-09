@@ -147,7 +147,7 @@ describe("WordsRound.getScores", () => {
       ]),
     );
 
-    const round = new WordsRound(initialGameState, playerStates);
+    const round = new WordsRound(initialGameState, playerStates, {});
     const scores = round.getScores();
     Object.entries(scores).forEach(([player, score]) =>
       expect(score).toBe(expected[player]),

@@ -1,4 +1,4 @@
-import { PlayerId } from "@dnedm/game-core";
+import { GameParameters, PlayerId } from "@dnedm/game-core";
 import { v4 } from "uuid";
 import { GameInstanceManager } from "../instance/game.instance.manager.js";
 import {
@@ -19,7 +19,7 @@ export class Lobby {
   public lastActivityAt: Date = new Date();
   public owner: PlayerId;
   public readonly players: Player[] = [];
-  public readonly gameInstanceManager: GameInstanceManager;
+  private readonly gameInstanceManager: GameInstanceManager;
   public readonly dispatchToPlayer: (
     playerId: PlayerId,
     payload: ServerPayloads[keyof ServerPayloads],
@@ -77,6 +77,14 @@ export class Lobby {
     this.dispatchStateToLobby();
   }
 
+  public updateGameParameters(parameters: GameParameters) {
+    this.gameInstanceManager.setGameParameters(parameters);
+  }
+
+  public startGame() {
+    this.gameInstanceManager.startGame(this.players.map(({ id }) => id));
+  }
+
   public serializeLobbyState(
     playerId: PlayerId,
   ): ServerPayloads[ServerEvents.LobbyState] {
@@ -88,6 +96,8 @@ export class Lobby {
       owner: getPlayerFromPlayerId(this.owner, this.players).name,
       players: this.players.map(({ name }) => name),
       gameState: this.serializeGameState(playerId),
+      roundEndsAt: this.gameInstanceManager.roundEndsAt,
+      nextRoundStartsAt: this.gameInstanceManager.nextRoundStartsAt,
     };
   }
 

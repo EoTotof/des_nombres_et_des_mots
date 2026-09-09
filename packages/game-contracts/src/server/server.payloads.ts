@@ -11,5 +11,7 @@ export type ServerPayloads = {
     owner: string;
     players: string[]; // IDs are private, these are the players' names
     gameState: GamePayload | null;
+    roundEndsAt: number | null;
+    nextRoundStartsAt: number | null;
   };
 };
