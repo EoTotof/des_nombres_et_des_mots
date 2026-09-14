@@ -6,10 +6,15 @@ import {
   PreviousRoundPayload,
   WordsRoundPayload,
 } from "@dnedm/game-contracts";
-import { Game, NumbersRound, PlayerId, WordsRound } from "@dnedm/game-core";
+import {
+  Game,
+  NumbersRound,
+  Player,
+  PlayerId,
+  WordsRound,
+} from "@dnedm/game-core";
 import { serializeNumbersGame } from "./numbers.serializers.js";
 import { serializeWordsGame } from "./words.serializers.js";
-import { Player } from "../../lobby/lobby.types.js";
 
 export function getPlayerFromPlayerId(
   playerId: PlayerId,

@@ -33,7 +33,7 @@ export function serializeNumbersGame(
   }
 }
 
-function serializeOperation(operation: Operation): OperationPayload {
+export function serializeOperation(operation: Operation): OperationPayload {
   return {
     leftId: operation.left.id,
     rightId: operation.right.id,

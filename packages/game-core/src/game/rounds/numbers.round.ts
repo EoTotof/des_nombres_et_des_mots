@@ -42,6 +42,16 @@ export class NumbersRound extends GameRound<NumbersGameState, Operation> {
     );
   }
 
+  undoMove(playerId: PlayerId, operationId: string): void {
+    const gameState = this.playerStates[playerId];
+    if (!gameState) {
+      throw new Error(`Unknown player: ${playerId}`);
+    }
+
+    const updatedGameState = gameState.removeOperation(operationId);
+    this.playerStates[playerId] = updatedGameState;
+  }
+
   getSolvedGameState(): NumbersGameState {
     return this.initialState.getSolvedGameState();
   }

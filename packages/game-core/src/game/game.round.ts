@@ -20,6 +20,7 @@ export abstract class GameRound<TGameState extends CloneableGameState, TMove> {
   }
 
   abstract pushMove(playerId: PlayerId, move: TMove): void;
+  abstract undoMove(playerId: PlayerId, moveId: string): void;
 
   abstract getScores(): RoundScore;
 }

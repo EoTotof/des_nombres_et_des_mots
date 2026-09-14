@@ -1,15 +1,19 @@
 import GameInterface from "@/app/numbers/_components/GameInterface";
 import { NumbersGameStateContext } from "@/app/numbers/_contexts/gameStateContext";
 import {
-  NumbersGamePayload,
+  ClientEvents,
   ObfuscatedNumbersRoundPayload,
+  parseNumbersGamePayload,
+  serializeOperation,
 } from "@dnedm/game-contracts";
-import { NumbersGameState, NumberTile, Operation } from "@dnedm/game-core";
+import { Socket } from "socket.io-client";
 
 export default function NumbersRound({
   payload,
+  socket,
 }: {
   payload: ObfuscatedNumbersRoundPayload;
+  socket: Socket;
 }) {
   const currentState = parseNumbersGamePayload(payload.currentPlayerState);
   const bestAttempt = parseNumbersGamePayload(payload.currentBestAttempt);
@@ -20,32 +24,18 @@ export default function NumbersRound({
         gameState={currentState}
         bestAttempt={bestAttempt}
         timer={null}
-        updateGameState={() => {}}
+        pushMove={(operation) =>
+          socket.emit(ClientEvents.PushMove, {
+            type: "operation",
+            move: serializeOperation(operation),
+          })
+        }
+        undoMove={(operation) =>
+          socket.emit(ClientEvents.UndoMove, {
+            moveId: operation.id,
+          })
+        }
       ></GameInterface>
     </NumbersGameStateContext>
   );
-}
-
-function parseNumbersGamePayload(
-  payload: NumbersGamePayload,
-): NumbersGameState {
-  const { initialTiles, targetNumber, operations: operationPayloads } = payload;
-  const operations: Operation[] = [];
-  const tilesAcc: NumberTile[] = [...initialTiles];
-
-  for (const operation of operationPayloads) {
-    const { leftId, rightId, operator } = operation;
-
-    const leftTile = tilesAcc.find(({ id }) => id === leftId);
-    const rightTile = tilesAcc.find(({ id }) => id === rightId);
-    if (!leftTile || !rightTile) {
-      throw Error("invalid numbers game payload");
-    }
-
-    const parsedOperation = new Operation(leftTile, rightTile, operator);
-    tilesAcc.push(parsedOperation.result);
-    operations.push(parsedOperation);
-  }
-
-  return new NumbersGameState(initialTiles, targetNumber, operations);
 }

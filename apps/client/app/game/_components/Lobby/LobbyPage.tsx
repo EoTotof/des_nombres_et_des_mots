@@ -54,9 +54,9 @@ export default function LobbyPage({ socket, lobbyState }: LobbyPageProps) {
     const currentRound = lobbyState.gameState.currentRound;
     switch (currentRound.type) {
       case "numbers":
-        return <NumbersRound payload={currentRound} />;
+        return <NumbersRound payload={currentRound} socket={socket} />;
       case "words":
-        return <WordsRound payload={currentRound} />;
+        return <WordsRound payload={currentRound} socket={socket} />;
     }
   }
 }

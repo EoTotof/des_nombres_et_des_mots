@@ -4,4 +4,6 @@ export enum ClientEvents {
   JoinLobby = "client.lobby.join",
   UpdateGameParameters = "client.game.updateParameters",
   StartGame = "client.game.start",
+  PushMove = "client.game.pushMove",
+  UndoMove = "client.game.undoMove",
 }

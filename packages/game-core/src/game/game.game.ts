@@ -123,11 +123,22 @@ export class Game {
       this.currentRound.pushMove(player, move);
     } else if (
       this.currentRound instanceof WordsRound &&
-      typeof move === "string"
+      (typeof move === "string" || Array.isArray(move))
     ) {
       this.currentRound.pushMove(player, move);
     } else {
       throw Error("incompatible move for current round");
     }
+  }
+
+  undoMove(player: PlayerId, moveId: string) {
+    if (!this.currentRound) {
+      throw Error("no current round");
+    }
+    if (this.currentRound instanceof WordsRound) {
+      throw Error("incompatible move for current round");
+    }
+
+    this.currentRound.undoMove(player, moveId);
   }
 }

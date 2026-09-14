@@ -1,4 +1,4 @@
-import { WordsGameState } from "@dnedm/game-core";
+import { LetterTile, WordsGameState } from "@dnedm/game-core";
 import { useMemo, useState } from "react";
 import TilePool from "./interface/TilePool";
 import { motion } from "motion/react";
@@ -13,14 +13,14 @@ import useKeyboardInteraction from "../_hooks/useKeyboardInteraction";
 type GameInterfaceProps = {
   gameState: WordsGameState;
   timer: number | null;
-  updateGameState: (gameState: WordsGameState) => void;
+  pushMove: (word: LetterTile[]) => void;
   onValidate?: () => void;
 };
 
 export default function GameInterface({
   gameState,
   timer,
-  updateGameState,
+  pushMove,
   onValidate,
 }: GameInterfaceProps) {
   const screenSize = useScreenSize();
@@ -33,7 +33,7 @@ export default function GameInterface({
     removeLetter,
     removeLastLetter,
     validateWord,
-  } = useCurrentWord((word) => updateGameState(gameState.pushWord(word)));
+  } = useCurrentWord(pushMove);
 
   useKeyboardInteraction(
     currentWord,

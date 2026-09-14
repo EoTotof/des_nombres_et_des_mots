@@ -15,4 +15,9 @@ export type Move = Operation | string;
 
 export type PlayerId = string;
 
+export type Player = {
+  id: PlayerId;
+  name: string;
+};
+
 export type RoundScore = Record<PlayerId, number>;

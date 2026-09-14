@@ -15,10 +15,10 @@ import {
 } from "@dnedm/game-contracts";
 import { randomUUID } from "crypto";
 import type { PlayerSocket } from "../socket/socket.types.js";
-import { Player } from "./lobby/lobby.types.js";
 import { UseGuards } from "@nestjs/common";
-import { IsLobbyOwnerGuard } from "./game.guards.js";
+import { IsInLobbyGuard, IsLobbyOwnerGuard } from "./game.guards.js";
 import { LobbyService } from "./lobby/lobby.service.js";
+import { Player } from "@dnedm/game-core";
 
 @WebSocketGateway({
   path: "/wsapi",
@@ -115,6 +115,32 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit {
       socket.data.playerId!,
     );
     lobby!.startGame();
+  }
+
+  @UseGuards(IsInLobbyGuard)
+  @SubscribeMessage(ClientEvents.PushMove)
+  onPushMove(
+    @ConnectedSocket() socket: PlayerSocket,
+    @MessageBody() payload: ClientPayloads[ClientEvents.PushMove],
+  ): void {
+    const lobby = this.lobbyService.manager.findPlayerLobby(
+      socket.data.playerId!,
+    );
+
+    lobby!.pushMove(socket.data.playerId!, payload);
+  }
+
+  @UseGuards(IsInLobbyGuard)
+  @SubscribeMessage(ClientEvents.UndoMove)
+  onUndoMove(
+    @ConnectedSocket() socket: PlayerSocket,
+    @MessageBody() payload: ClientPayloads[ClientEvents.UndoMove],
+  ): void {
+    const lobby = this.lobbyService.manager.findPlayerLobby(
+      socket.data.playerId!,
+    );
+
+    lobby!.undoMove(socket.data.playerId!, payload.moveId);
   }
 
   @SubscribeMessage(ClientEvents.Ping)

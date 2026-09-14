@@ -1,13 +1,10 @@
-import { PlayerId } from "@dnedm/game-core";
+import { Player, PlayerId } from "@dnedm/game-core";
 import { Lobby } from "./lobby.js";
 import { ServerPayloads } from "@dnedm/game-contracts";
-import { Player } from "./lobby.types.js";
-import { Injectable } from "@nestjs/common";
 
 const LOBBY_CLEANUP_INTERVAL = 60_000; // 1 minute
 const LOBBY_INACTIVITY_TIMEOUT = 15 * 60_000; // 15 minutes
 
-@Injectable()
 export class LobbyManager {
   private readonly lobbies = new Map<string, Lobby>();
   private readonly playerLobbies = new Map<PlayerId, string>();

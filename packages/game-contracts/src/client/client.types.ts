@@ -10,4 +10,10 @@ export interface ClientToServerEvents {
     payload: ClientPayloads[ClientEvents.UpdateGameParameters],
   ) => void;
   [ClientEvents.StartGame]: () => void;
+  [ClientEvents.PushMove]: (
+    payload: ClientPayloads[ClientEvents.PushMove],
+  ) => void;
+  [ClientEvents.UndoMove]: (
+    payload: ClientPayloads[ClientEvents.UndoMove],
+  ) => void;
 }

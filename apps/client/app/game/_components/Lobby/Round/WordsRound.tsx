@@ -1,15 +1,18 @@
 import GameInterface from "@/app/words/_components/GameInterface";
 import { WordsGameStateContext } from "@/app/words/_contexts/gameStateContext";
 import {
-  WordsGamePayload,
   ObfuscatedWordsRoundPayload,
+  ClientEvents,
+  parseWordsGamePayload,
 } from "@dnedm/game-contracts";
-import { WordsGameState } from "@dnedm/game-core";
+import { Socket } from "socket.io-client";
 
 export default function WordsRound({
   payload,
+  socket,
 }: {
   payload: ObfuscatedWordsRoundPayload;
+  socket: Socket;
 }) {
   const currentState = parseWordsGamePayload(payload.currentPlayerState);
 
@@ -18,14 +21,10 @@ export default function WordsRound({
       <GameInterface
         gameState={currentState}
         timer={null}
-        updateGameState={() => {}}
+        pushMove={(word) =>
+          socket.emit(ClientEvents.PushMove, { type: "word", move: word })
+        }
       ></GameInterface>
     </WordsGameStateContext>
   );
-}
-
-function parseWordsGamePayload(payload: WordsGamePayload): WordsGameState {
-  const { initialTiles, words } = payload;
-
-  return new WordsGameState(initialTiles, words);
 }

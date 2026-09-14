@@ -1,9 +1,10 @@
+import { MovePayload, parseOperationPayload } from "@dnedm/game-contracts";
 import {
   DEFAULT_GAME_PARAMETERS,
   GameParameters,
   Game,
   PlayerId,
-  Move,
+  NumbersGameState,
 } from "@dnedm/game-core";
 
 const RESULTS_TIMER = 30;
@@ -43,6 +44,8 @@ export class GameInstanceManager {
       throw new Error("Game has not started");
     }
 
+    this.clearNextRoundTimer();
+
     this.gameInstance.startNewRound();
 
     this.onStateChange();
@@ -77,20 +80,6 @@ export class GameInstanceManager {
     }, RESULTS_TIMER * 1000);
   }
 
-  nextRound(): void {
-    if (!this.gameInstance) {
-      throw new Error("Game has not started");
-    }
-
-    if (this.gameInstance.currentRound) {
-      throw new Error("Current round has not ended");
-    }
-
-    this.clearNextRoundTimer();
-
-    this.startRound();
-  }
-
   private clearRoundTimer(): void {
     if (this.roundTimer !== null) {
       clearTimeout(this.roundTimer);
@@ -115,12 +104,40 @@ export class GameInstanceManager {
     this.startRound();
   }
 
-  pushMove(player: PlayerId, move: Move) {
-    if (!this.gameInstance) {
-      throw new Error("Game has not started");
+  pushMove(player: PlayerId, movePayload: MovePayload) {
+    if (!this.gameInstance?.currentRound) {
+      throw new Error("No on-going round");
     }
 
-    this.gameInstance.pushMove(player, move);
+    const gameState = this.gameInstance.currentRound.playerStates[player];
+    if (!gameState) {
+      throw new Error("Player not found");
+    }
+
+    switch (movePayload.type) {
+      case "operation":
+        if (!(gameState instanceof NumbersGameState)) {
+          throw new Error("Invalid move for current round");
+        }
+        this.gameInstance.pushMove(
+          player,
+          parseOperationPayload(movePayload.move, gameState.currentTiles),
+        );
+        break;
+      case "word":
+        this.gameInstance.pushMove(player, movePayload.move);
+    }
+
+    this.onStateChange();
+  }
+
+  undoMove(player: PlayerId, moveId: string) {
+    if (!this.gameInstance?.currentRound) {
+      throw new Error("No ongoing round");
+    }
+
+    this.gameInstance.undoMove(player, moveId);
+
     this.onStateChange();
   }
 }

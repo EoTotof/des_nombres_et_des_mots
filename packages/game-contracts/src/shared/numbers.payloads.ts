@@ -27,3 +27,8 @@ export type OperationPayload = {
   rightId: string;
   operator: Operator;
 };
+
+export type NumbersMovePayload = {
+  type: "operation";
+  move: OperationPayload;
+};

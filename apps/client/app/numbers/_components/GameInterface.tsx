@@ -1,5 +1,5 @@
 import TargetCard from "@/app/numbers/_components/cards/TargetCard";
-import { NumbersGameState } from "@dnedm/game-core";
+import { NumbersGameState, Operation } from "@dnedm/game-core";
 import { useMemo, useState } from "react";
 import useCurrentMove from "../_hooks/useCurrentMove";
 import CurrentMove from "./interface/CurrentMove";
@@ -15,7 +15,8 @@ type GameInterfaceProps = {
   gameState: NumbersGameState;
   timer: number | null;
   bestAttempt: NumbersGameState | null;
-  updateGameState: (gameState: NumbersGameState) => void;
+  pushMove: (operation: Operation) => void;
+  undoMove: (operation: Operation) => void;
   onValidate?: () => void;
 };
 
@@ -23,7 +24,8 @@ export default function GameInterface({
   gameState,
   timer,
   bestAttempt,
-  updateGameState,
+  pushMove,
+  undoMove,
   onValidate,
 }: GameInterfaceProps) {
   const screenSize = useScreenSize();
@@ -32,9 +34,7 @@ export default function GameInterface({
   const [isOperatorHovered, setIsOperatorHovered] = useState<boolean>(false);
 
   const { currentMove, selectToken, removeToken, resetCurrentMove } =
-    useCurrentMove((operation) =>
-      updateGameState(gameState.pushOperation(operation)),
-    );
+    useCurrentMove(pushMove);
 
   const playableTiles = useMemo(
     () =>
@@ -68,7 +68,7 @@ export default function GameInterface({
             operations={gameState.operations.toReversed()}
             //selectToken={selectToken} // TODO needs to be aware of invalid/already-used tokens
             onDelete={(operation) => {
-              updateGameState(gameState.removeOperation(operation));
+              undoMove(operation);
               resetCurrentMove(); // TODO could be better
             }}
           />

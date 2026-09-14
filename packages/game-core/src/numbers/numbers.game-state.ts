@@ -129,7 +129,7 @@ export class NumbersGameState {
   }
 
   pushOperation(operation: Operation): NumbersGameState {
-    // TODO we can check if operation is valid
+    // TODO we must check if operation is valid
     return new NumbersGameState(
       this.initialTiles,
       this.targetNumber,
@@ -138,10 +138,10 @@ export class NumbersGameState {
     );
   }
 
-  removeOperation(operation: Operation): NumbersGameState {
+  removeOperation(operationId: string): NumbersGameState {
     /** Removes arg operation and all subsequent operations that depend on it */
     const remainingOperations = this.operations.filter(
-      ({ id }) => !id.includes(operation.id),
+      ({ id }) => !id.includes(operationId),
     );
 
     return new NumbersGameState(

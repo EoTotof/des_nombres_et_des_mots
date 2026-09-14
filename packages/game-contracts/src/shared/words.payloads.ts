@@ -19,3 +19,8 @@ export type WordsGamePayload = {
 export type ObfuscatedWordsGamePayload = {
   wordsLengths: number[];
 };
+
+export type WordsMovePayload = {
+  type: "word";
+  move: string | LetterTile[];
+};

@@ -84,7 +84,12 @@ export default function Numbers() {
         gameState={gameState}
         timer={timer}
         bestAttempt={bestAttempt}
-        updateGameState={updateGameState}
+        pushMove={(operation) =>
+          updateGameState(gameState.pushOperation(operation))
+        }
+        undoMove={(operation) =>
+          updateGameState(gameState.removeOperation(operation))
+        }
         onValidate={() => {
           resetTimer();
           onValidate();

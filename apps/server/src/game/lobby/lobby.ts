@@ -1,17 +1,15 @@
-import { GameParameters, PlayerId } from "@dnedm/game-core";
+import { GameParameters, Player, PlayerId } from "@dnedm/game-core";
 import { v4 } from "uuid";
 import { GameInstanceManager } from "../instance/game.instance.manager.js";
 import {
   GamePayload,
   ServerEvents,
-  ServerPayloads,
-} from "@dnedm/game-contracts";
-import {
   getPlayerFromPlayerId,
   serializeCurrentRound,
   serializePreviousRound,
-} from "../instance/serializers/game.serializers.js";
-import { Player } from "./lobby.types.js";
+  ServerPayloads,
+  MovePayload,
+} from "@dnedm/game-contracts";
 
 export class Lobby {
   public readonly id: string = v4();
@@ -85,6 +83,14 @@ export class Lobby {
     this.gameInstanceManager.startGame(this.players.map(({ id }) => id));
   }
 
+  public pushMove(playerId: PlayerId, payload: MovePayload) {
+    this.gameInstanceManager.pushMove(playerId, payload);
+  }
+
+  public undoMove(playerId: PlayerId, moveId: string) {
+    this.gameInstanceManager.undoMove(playerId, moveId);
+  }
+
   public serializeLobbyState(
     playerId: PlayerId,
   ): ServerPayloads[ServerEvents.LobbyState] {
@@ -108,7 +114,14 @@ export class Lobby {
 
     const game = this.gameInstanceManager.gameInstance;
     return {
-      pastRoundScores: game.pastRoundScores,
+      pastRoundScores: game.pastRoundScores.map((roundScores) =>
+        Object.fromEntries(
+          Object.entries(roundScores).map(([playerId, score]) => [
+            getPlayerFromPlayerId(playerId, this.players).name,
+            score,
+          ]),
+        ),
+      ),
       currentRound: serializeCurrentRound(
         playerId,
         this.players,

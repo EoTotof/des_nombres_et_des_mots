@@ -1,6 +1,10 @@
 import { GameRound } from "../game.round.js";
 import { PlayerId, RoundScore } from "../game.types.js";
-import { WordsGameState, WordsRoundParameters } from "../../words/index.js";
+import {
+  LetterTile,
+  WordsGameState,
+  WordsRoundParameters,
+} from "../../words/index.js";
 
 export class WordsRound extends GameRound<WordsGameState, string> {
   static initialize(
@@ -18,7 +22,7 @@ export class WordsRound extends GameRound<WordsGameState, string> {
     );
   }
 
-  pushMove(playerId: PlayerId, word: string): void {
+  pushMove(playerId: PlayerId, word: string | LetterTile[]): void {
     const gameState = this.playerStates[playerId];
 
     if (!gameState) {
@@ -26,6 +30,10 @@ export class WordsRound extends GameRound<WordsGameState, string> {
     }
 
     this.playerStates[playerId] = gameState.pushWord(word);
+  }
+
+  undoMove(): void {
+    throw Error("Cannot undo a move in a Words round");
   }
 
   getScores(): RoundScore {
