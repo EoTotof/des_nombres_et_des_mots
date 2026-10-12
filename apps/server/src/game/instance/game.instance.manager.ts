@@ -48,13 +48,13 @@ export class GameInstanceManager {
 
     this.gameInstance.startNewRound();
 
-    this.onStateChange();
-
     this.roundEndsAt =
       new Date().getTime() + this.gameParameters.roundDuration * 1000;
     this.roundTimer = setTimeout(() => {
       this.endRound();
     }, this.gameParameters.roundDuration * 1000);
+
+    this.onStateChange();
   }
 
   private endRound(): void {
@@ -66,11 +66,10 @@ export class GameInstanceManager {
 
     this.gameInstance.endCurrentRound();
 
-    this.onStateChange();
-
     if (
       this.gameInstance.pastRoundScores.length >= this.gameParameters.roundCount
     ) {
+      this.onStateChange();
       return;
     }
 
@@ -78,6 +77,8 @@ export class GameInstanceManager {
     this.nextRoundTimer = setTimeout(() => {
       this.startRound();
     }, RESULTS_TIMER * 1000);
+
+    this.onStateChange();
   }
 
   private clearRoundTimer(): void {

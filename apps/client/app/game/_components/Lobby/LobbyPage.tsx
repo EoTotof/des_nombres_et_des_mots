@@ -9,6 +9,8 @@ import { Socket } from "socket.io-client";
 import Button from "@/components/Button";
 import NumbersRound from "./Round/NumbersRound";
 import WordsRound from "./Round/WordsRound";
+import { useCountdown } from "@/hooks/useCountdown";
+import { useEffect, useRef } from "react";
 
 type LobbyPageProps = {
   socket: Socket;
@@ -20,6 +22,29 @@ export default function LobbyPage({ socket, lobbyState }: LobbyPageProps) {
   function updateParameters(parameters: GameParametersT) {
     socket.emit(ClientEvents.UpdateGameParameters, parameters);
   }
+
+  // TODO make a hook and do the same for nextRoundStartsAt
+  const roundEndsAtRef = useRef<number | null>(null);
+  const roundCountdown = useCountdown();
+
+  useEffect(() => {
+    const [, startTimer, resetTimer] = roundCountdown;
+
+    if (roundEndsAtRef.current === lobbyState.roundEndsAt) {
+      return;
+    }
+
+    roundEndsAtRef.current = lobbyState.roundEndsAt;
+
+    if (lobbyState.roundEndsAt) {
+      const duration = Math.floor(
+        (lobbyState.roundEndsAt - new Date().getTime()) / 1000,
+      );
+      startTimer(duration);
+    } else {
+      resetTimer();
+    }
+  }, [lobbyState, roundCountdown]);
 
   if (!lobbyState.gameState) {
     return (
@@ -54,9 +79,21 @@ export default function LobbyPage({ socket, lobbyState }: LobbyPageProps) {
     const currentRound = lobbyState.gameState.currentRound;
     switch (currentRound.type) {
       case "numbers":
-        return <NumbersRound payload={currentRound} socket={socket} />;
+        return (
+          <NumbersRound
+            payload={currentRound}
+            socket={socket}
+            timer={roundCountdown[0]}
+          />
+        );
       case "words":
-        return <WordsRound payload={currentRound} socket={socket} />;
+        return (
+          <WordsRound
+            payload={currentRound}
+            socket={socket}
+            timer={roundCountdown[0]}
+          />
+        );
     }
   }
 }

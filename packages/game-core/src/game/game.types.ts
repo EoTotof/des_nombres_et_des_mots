@@ -1,5 +1,5 @@
 import { NumbersRoundParameters, Operation } from "../numbers/index.js";
-import { WordsRoundParameters } from "../words/index.js";
+import { LetterTile, WordsRoundParameters } from "../words/index.js";
 
 type GameMode = "numbers" | "words" | "mixed";
 
@@ -11,7 +11,7 @@ export type GameParameters = {
   wordsParameters: Omit<WordsRoundParameters, "duration">;
 };
 
-export type Move = Operation | string;
+export type Move = Operation | LetterTile[] | string;
 
 export type PlayerId = string;
 

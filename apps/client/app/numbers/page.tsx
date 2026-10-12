@@ -88,7 +88,7 @@ export default function Numbers() {
           updateGameState(gameState.pushOperation(operation))
         }
         undoMove={(operation) =>
-          updateGameState(gameState.removeOperation(operation))
+          updateGameState(gameState.removeOperation(operation.id))
         }
         onValidate={() => {
           resetTimer();

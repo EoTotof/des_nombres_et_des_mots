@@ -10,9 +10,11 @@ import { Socket } from "socket.io-client";
 export default function WordsRound({
   payload,
   socket,
+  timer,
 }: {
   payload: ObfuscatedWordsRoundPayload;
   socket: Socket;
+  timer: number | null;
 }) {
   const currentState = parseWordsGamePayload(payload.currentPlayerState);
 
@@ -20,11 +22,11 @@ export default function WordsRound({
     <WordsGameStateContext value={{ currentGameState: currentState }}>
       <GameInterface
         gameState={currentState}
-        timer={null}
+        timer={timer}
         pushMove={(word) =>
           socket.emit(ClientEvents.PushMove, { type: "word", move: word })
         }
-      ></GameInterface>
+      />
     </WordsGameStateContext>
   );
 }

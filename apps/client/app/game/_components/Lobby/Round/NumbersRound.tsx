@@ -11,9 +11,11 @@ import { Socket } from "socket.io-client";
 export default function NumbersRound({
   payload,
   socket,
+  timer,
 }: {
   payload: ObfuscatedNumbersRoundPayload;
   socket: Socket;
+  timer: number | null;
 }) {
   const currentState = parseNumbersGamePayload(payload.currentPlayerState);
   const bestAttempt = parseNumbersGamePayload(payload.currentBestAttempt);
@@ -23,7 +25,7 @@ export default function NumbersRound({
       <GameInterface
         gameState={currentState}
         bestAttempt={bestAttempt}
-        timer={null}
+        timer={timer}
         pushMove={(operation) =>
           socket.emit(ClientEvents.PushMove, {
             type: "operation",
@@ -35,7 +37,7 @@ export default function NumbersRound({
             moveId: operation.id,
           })
         }
-      ></GameInterface>
+      />
     </NumbersGameStateContext>
   );
 }
