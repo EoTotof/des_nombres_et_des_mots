@@ -7,19 +7,28 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
+import { WsException } from "@nestjs/websockets";
+import { StandardSchemaValidationPipe } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import {
   ClientEvents,
   ClientPayloads,
+  createLobbySchema,
+  joinLobbySchema,
   ServerEvents,
 } from "@dnedm/game-contracts";
 import { randomUUID } from "crypto";
 import type { PlayerSocket } from "../socket/socket.types.js";
-import { UseGuards } from "@nestjs/common";
+import { UseGuards, UsePipes } from "@nestjs/common";
 import { IsInLobbyGuard, IsLobbyOwnerGuard } from "./game.guards.js";
 import { LobbyService } from "./lobby/lobby.service.js";
 import { Player } from "@dnedm/game-core";
 
+@UsePipes(
+  new StandardSchemaValidationPipe({
+    exceptionFactory: (issues) => new WsException(issues),
+  }),
+)
 @WebSocketGateway({
   path: "/wsapi",
   transports: ["websocket"],
@@ -63,10 +72,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit {
   @SubscribeMessage(ClientEvents.CreateLobby)
   onCreateLobby(
     @ConnectedSocket() socket: PlayerSocket,
-    @MessageBody() payload: ClientPayloads[ClientEvents.CreateLobby],
+    @MessageBody({ schema: createLobbySchema })
+    payload: ClientPayloads[ClientEvents.CreateLobby],
   ): void {
     if (!socket.data.playerId) {
-      throw Error("socket.data.playerId should be defined");
+      throw new WsException("socket.data.playerId should be defined");
     }
 
     const player: Player = {
@@ -74,17 +84,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit {
       name: payload.name,
     };
 
-    const lobby = this.lobbyService.manager.createLobby(player);
-    lobby.addPlayer(player);
+    this.lobbyService.manager.createLobby(player);
   }
 
   @SubscribeMessage(ClientEvents.JoinLobby)
   onJoinLobby(
     @ConnectedSocket() socket: PlayerSocket,
-    @MessageBody() payload: ClientPayloads[ClientEvents.JoinLobby],
+    @MessageBody({ schema: joinLobbySchema })
+    payload: ClientPayloads[ClientEvents.JoinLobby],
   ): void {
     if (!socket.data.playerId) {
-      throw Error("socket.data.playerId should be defined");
+      throw new WsException("socket.data.playerId should be defined");
     }
 
     const player: Player = {
@@ -92,8 +102,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit {
       name: payload.name,
     };
 
-    const lobby = this.lobbyService.manager.getLobby(payload.lobbyId);
-    lobby.addPlayer(player);
+    this.lobbyService.manager.joinLobby(player, payload.lobbyId);
   }
 
   @UseGuards(IsLobbyOwnerGuard)

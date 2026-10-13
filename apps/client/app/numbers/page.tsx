@@ -83,6 +83,7 @@ export default function Numbers() {
         key={gameState.initialTiles.map(({ value }) => value).join("")}
         gameState={gameState}
         timer={timer}
+        maxTime={gameState.parameters.duration}
         bestAttempt={bestAttempt}
         pushMove={(operation) =>
           updateGameState(gameState.pushOperation(operation))

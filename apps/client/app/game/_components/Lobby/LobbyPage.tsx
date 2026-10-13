@@ -10,7 +10,10 @@ import Button from "@/components/Button";
 import NumbersRound from "./Round/NumbersRound";
 import WordsRound from "./Round/WordsRound";
 import { useCountdown } from "@/hooks/useCountdown";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import LoadingScreen from "@/components/LoadingScreen";
+import Leaderboard from "./Leaderboard";
+import { useRoundCountdown } from "../../_hooks/useRoundCountdown";
 
 type LobbyPageProps = {
   socket: Socket;
@@ -23,28 +26,20 @@ export default function LobbyPage({ socket, lobbyState }: LobbyPageProps) {
     socket.emit(ClientEvents.UpdateGameParameters, parameters);
   }
 
-  // TODO make a hook and do the same for nextRoundStartsAt
-  const roundEndsAtRef = useRef<number | null>(null);
-  const roundCountdown = useCountdown();
+  // TODO handle loading screen better
+  const [showLoadingScreen, setShowLoadingScreen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const [, startTimer, resetTimer] = roundCountdown;
+  const roundCountdown = useRoundCountdown(
+    useCallback(() => lobbyState.roundEndsAt, [lobbyState]),
+    useCallback(() => setShowLoadingScreen(true), []),
+    useCallback(() => setShowLoadingScreen(false), []),
+  );
 
-    if (roundEndsAtRef.current === lobbyState.roundEndsAt) {
-      return;
-    }
-
-    roundEndsAtRef.current = lobbyState.roundEndsAt;
-
-    if (lobbyState.roundEndsAt) {
-      const duration = Math.floor(
-        (lobbyState.roundEndsAt - new Date().getTime()) / 1000,
-      );
-      startTimer(duration);
-    } else {
-      resetTimer();
-    }
-  }, [lobbyState, roundCountdown]);
+  const resultCountdown = useRoundCountdown(
+    useCallback(() => lobbyState.nextRoundStartsAt, [lobbyState]),
+    useCallback(() => setShowLoadingScreen(true), []),
+    useCallback(() => setShowLoadingScreen(false), []),
+  );
 
   if (!lobbyState.gameState) {
     return (
@@ -80,20 +75,41 @@ export default function LobbyPage({ socket, lobbyState }: LobbyPageProps) {
     switch (currentRound.type) {
       case "numbers":
         return (
-          <NumbersRound
-            payload={currentRound}
-            socket={socket}
-            timer={roundCountdown[0]}
-          />
+          <>
+            {showLoadingScreen && <LoadingScreen />}
+            <NumbersRound
+              payload={currentRound}
+              socket={socket}
+              timer={roundCountdown[0]}
+              maxTime={lobbyState.parameters.roundDuration}
+            />
+          </>
         );
       case "words":
         return (
-          <WordsRound
-            payload={currentRound}
-            socket={socket}
-            timer={roundCountdown[0]}
-          />
+          <>
+            {showLoadingScreen && <LoadingScreen />}
+            <WordsRound
+              payload={currentRound}
+              socket={socket}
+              timer={roundCountdown[0]}
+              maxTime={lobbyState.parameters.roundDuration}
+            />
+          </>
         );
     }
   }
+
+  return (
+    <>
+      {showLoadingScreen && <LoadingScreen />}
+      <Leaderboard
+        title="Scores"
+        scores={lobbyState.gameState.pastRoundScores}
+      />
+      {resultCountdown[0] !== null ? (
+        <>Prochaine manche dans {resultCountdown[0]} secondes</>
+      ) : null}
+    </>
+  );
 }

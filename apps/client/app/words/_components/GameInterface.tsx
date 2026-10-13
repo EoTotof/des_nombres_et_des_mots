@@ -13,6 +13,7 @@ import useKeyboardInteraction from "../_hooks/useKeyboardInteraction";
 type GameInterfaceProps = {
   gameState: WordsGameState;
   timer: number | null;
+  maxTime: number | null;
   pushMove: (word: LetterTile[]) => void;
   onValidate?: () => void;
 };
@@ -20,6 +21,7 @@ type GameInterfaceProps = {
 export default function GameInterface({
   gameState,
   timer,
+  maxTime,
   pushMove,
   onValidate,
 }: GameInterfaceProps) {
@@ -75,11 +77,7 @@ export default function GameInterface({
         <aside className="sm:w-128 md:w-196 lg:w-248">
           {timer !== null ? (
             <div className="mt-32">
-              <Timer
-                currentTime={timer}
-                maxTime={gameState.parameters.duration || 0}
-                showTime
-              />
+              <Timer currentTime={timer} maxTime={maxTime || 0} showTime />
             </div>
           ) : null}
           {gameState.words.length > 0 && onValidate && (

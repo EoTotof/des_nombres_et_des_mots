@@ -12,10 +12,12 @@ export default function NumbersRound({
   payload,
   socket,
   timer,
+  maxTime,
 }: {
   payload: ObfuscatedNumbersRoundPayload;
   socket: Socket;
   timer: number | null;
+  maxTime: number;
 }) {
   const currentState = parseNumbersGamePayload(payload.currentPlayerState);
   const bestAttempt = parseNumbersGamePayload(payload.currentBestAttempt);
@@ -26,6 +28,7 @@ export default function NumbersRound({
         gameState={currentState}
         bestAttempt={bestAttempt}
         timer={timer}
+        maxTime={maxTime}
         pushMove={(operation) =>
           socket.emit(ClientEvents.PushMove, {
             type: "operation",

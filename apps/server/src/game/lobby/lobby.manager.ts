@@ -41,14 +41,14 @@ export class LobbyManager {
     return lobby;
   }
 
-  createLobby(owner: Player): Lobby {
+  createLobby(owner: Player) {
     if (this.playerLobbies.has(owner.id)) {
       throw new Error("Player is already in a lobby");
     }
     const lobby = new Lobby(owner, this.dispatchToPlayer);
     this.lobbies.set(lobby.id, lobby);
+    lobby.addPlayer(owner);
     this.playerLobbies.set(owner.id, lobby.id);
-    return lobby;
   }
 
   getLobby(lobbyId: string): Lobby {
@@ -57,6 +57,16 @@ export class LobbyManager {
       throw Error("Lobby does not exist");
     }
     return lobby;
+  }
+
+  joinLobby(player: Player, lobbyId: string) {
+    if (this.playerLobbies.has(player.id)) {
+      throw new Error("Player is already in a lobby");
+    }
+
+    const lobby = this.getLobby(lobbyId);
+    lobby.addPlayer(player);
+    this.playerLobbies.set(player.id, lobby.id);
   }
 
   private deleteInactiveLobbies(): void {

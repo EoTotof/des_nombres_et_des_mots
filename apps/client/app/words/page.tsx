@@ -68,6 +68,7 @@ export default function Words() {
         key={gameState.initialTiles.map(({ letter }) => letter).join("")}
         gameState={gameState}
         timer={timer}
+        maxTime={gameState.parameters.duration}
         pushMove={(word) => updateGameState(gameState.pushWord(word))}
         onValidate={() => {
           resetTimer();

@@ -14,6 +14,7 @@ import Timer from "@/components/Timer";
 type GameInterfaceProps = {
   gameState: NumbersGameState;
   timer: number | null;
+  maxTime: number | null;
   bestAttempt: NumbersGameState | null;
   pushMove: (operation: Operation) => void;
   undoMove: (operation: Operation) => void;
@@ -23,6 +24,7 @@ type GameInterfaceProps = {
 export default function GameInterface({
   gameState,
   timer,
+  maxTime,
   bestAttempt,
   pushMove,
   undoMove,
@@ -79,11 +81,7 @@ export default function GameInterface({
           <TargetCard size={screenSize} targetValue={gameState.targetNumber} />
           {timer !== null ? (
             <div className="mt-32">
-              <Timer
-                currentTime={timer}
-                maxTime={gameState.parameters.duration || 0}
-                showTime
-              />
+              <Timer currentTime={timer} maxTime={maxTime || 0} showTime />
             </div>
           ) : null}
           {bestAttempt && (

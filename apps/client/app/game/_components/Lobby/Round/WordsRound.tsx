@@ -11,10 +11,12 @@ export default function WordsRound({
   payload,
   socket,
   timer,
+  maxTime,
 }: {
   payload: ObfuscatedWordsRoundPayload;
   socket: Socket;
   timer: number | null;
+  maxTime: number;
 }) {
   const currentState = parseWordsGamePayload(payload.currentPlayerState);
 
@@ -23,6 +25,7 @@ export default function WordsRound({
       <GameInterface
         gameState={currentState}
         timer={timer}
+        maxTime={maxTime}
         pushMove={(word) =>
           socket.emit(ClientEvents.PushMove, { type: "word", move: word })
         }

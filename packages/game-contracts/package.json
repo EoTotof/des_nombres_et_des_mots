@@ -18,6 +18,7 @@
     }
   },
   "dependencies": {
-    "@dnedm/game-core": "workspace:*"
+    "@dnedm/game-core": "workspace:*",
+    "zod": "^4.6.6"
   }
 }
