@@ -6,4 +6,5 @@ export enum ClientEvents {
   StartGame = "client.game.start",
   PushMove = "client.game.pushMove",
   UndoMove = "client.game.undoMove",
+  StartNextRound = "client.game.startNextRound",
 }

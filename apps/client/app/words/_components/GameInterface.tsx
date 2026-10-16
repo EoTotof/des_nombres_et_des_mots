@@ -37,11 +37,23 @@ export default function GameInterface({
     validateWord,
   } = useCurrentWord(pushMove);
 
+  const [validated, setValidated] = useState<boolean>(false);
+  const gameIsActive = !validated && (timer === null || timer > 0);
+
   useKeyboardInteraction(
     currentWord,
-    selectLetter,
-    removeLastLetter,
-    validateWord,
+    (letter) => {
+      if (!gameIsActive) return;
+      selectLetter(letter);
+    },
+    () => {
+      if (!gameIsActive) return;
+      removeLastLetter();
+    },
+    () => {
+      if (!gameIsActive) return;
+      validateWord();
+    },
   );
 
   const playableTiles = useMemo(() => {
@@ -82,7 +94,13 @@ export default function GameInterface({
           ) : null}
           {gameState.words.length > 0 && onValidate && (
             <div className="mt-64 flex flex-col items-center">
-              <Button className="mt-16" onClick={onValidate}>
+              <Button
+                className="mt-16"
+                onClick={() => {
+                  setValidated(true);
+                  onValidate();
+                }}
+              >
                 Valider
               </Button>
             </div>

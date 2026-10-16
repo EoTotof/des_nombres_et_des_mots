@@ -39,9 +39,15 @@ export class GameInstanceManager {
     this.onStateChange();
   }
 
-  private startRound(): void {
+  public startRound(): void {
     if (!this.gameInstance) {
       throw new Error("Game has not started");
+    }
+
+    if (
+      this.gameInstance.pastRoundScores.length >= this.gameParameters.roundCount
+    ) {
+      throw new Error("Game is over");
     }
 
     this.clearNextRoundTimer();

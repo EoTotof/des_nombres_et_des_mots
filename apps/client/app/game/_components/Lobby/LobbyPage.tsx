@@ -7,13 +7,16 @@ import {
 } from "@dnedm/game-contracts";
 import { Socket } from "socket.io-client";
 import Button from "@/components/Button";
-import NumbersRound from "./Round/NumbersRound";
-import WordsRound from "./Round/WordsRound";
-import { useCountdown } from "@/hooks/useCountdown";
-import { useCallback, useEffect, useRef, useState } from "react";
+import NumbersRound from "./round/NumbersRound";
+import WordsRound from "./round/WordsRound";
+import { useCallback, useState } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
-import Leaderboard from "./Leaderboard";
+import Leaderboard from "./results/Leaderboard";
 import { useRoundCountdown } from "../../_hooks/useRoundCountdown";
+import NumbersResults from "./results/NumbersResults";
+import WordsResults from "./results/WordsResults";
+import Input from "@/components/inputs/Input";
+import { Copy } from "lucide-react";
 
 type LobbyPageProps = {
   socket: Socket;
@@ -43,23 +46,35 @@ export default function LobbyPage({ socket, lobbyState }: LobbyPageProps) {
 
   if (!lobbyState.gameState) {
     return (
-      <div>
-        <div>Paramètres</div>
-        <GameParameters
-          parameters={lobbyState.parameters}
-          setParameters={updateParameters}
-          disabled={!isLobbyOwner}
-        />
+      <div className="flex flex-col gap-16">
         <div>
-          <div>lobby ID: {lobbyState.lobbyId}</div>
-          <div>lobby owner: {lobbyState.owner}</div>
-          <div>
-            <ul>
-              {lobbyState.players.map((name) => (
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
+          <div className="mb-4 text-2xl font-semibold">Inviter des joueurs</div>
+          <div className="flex items-center gap-8">
+            <Input
+              value={`${window.location.origin}/game?uuid=${lobbyState.lobbyId}`}
+            />
+            <Button>
+              <Copy />
+            </Button>
           </div>
+        </div>
+        <div>
+          <div className="mb-4 text-2xl font-semibold">Paramètres</div>
+          <GameParameters
+            parameters={lobbyState.parameters}
+            setParameters={updateParameters}
+            disabled={!isLobbyOwner}
+          />
+        </div>
+        <div>
+          <div className="text-2xl font-semibold">Joueurs</div>
+          <ul>
+            {lobbyState.players.map((name) => (
+              <li key={name} className="text-lg">
+                {name}
+              </li>
+            ))}
+          </ul>
         </div>
         {isLobbyOwner ? (
           <Button onClick={() => socket.emit(ClientEvents.StartGame)}>
@@ -103,12 +118,31 @@ export default function LobbyPage({ socket, lobbyState }: LobbyPageProps) {
   return (
     <>
       {showLoadingScreen && <LoadingScreen />}
+      {lobbyState.gameState.previousRound?.type === "numbers" ? (
+        <NumbersResults
+          payload={lobbyState.gameState.previousRound}
+          currentPlayer={lobbyState.playerName}
+        />
+      ) : null}
+      {lobbyState.gameState.previousRound?.type === "words" ? (
+        <WordsResults
+          payload={lobbyState.gameState.previousRound}
+          currentPlayer={lobbyState.playerName}
+        />
+      ) : null}
       <Leaderboard
         title="Scores"
         scores={lobbyState.gameState.pastRoundScores}
       />
       {resultCountdown[0] !== null ? (
-        <>Prochaine manche dans {resultCountdown[0]} secondes</>
+        <>
+          <div>Prochaine manche dans {resultCountdown[0]} secondes</div>
+          {isLobbyOwner ? (
+            <Button onClick={() => socket.emit(ClientEvents.StartNextRound)}>
+              Continuer maintenant
+            </Button>
+          ) : null}
+        </>
       ) : null}
     </>
   );

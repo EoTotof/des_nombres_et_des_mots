@@ -3,16 +3,18 @@ import Input from "@/components/inputs/Input";
 import { ClientEvents } from "@dnedm/game-contracts";
 import { useState } from "react";
 import { Socket } from "socket.io-client";
+import { useSearchParams } from "next/navigation";
 
 export default function GameMenu({ socket }: { socket: Socket }) {
+  const searchParams = useSearchParams();
+
   const [name, setName] = useState<string>("");
-  const [lobbyId, setLobbyId] = useState<string>("");
+  const [lobbyId, setLobbyId] = useState<string>(
+    searchParams.get("uuid") || "",
+  );
 
   return (
     <div className="flex flex-col gap-16">
-      <div>
-        <Button onClick={() => socket.emit(ClientEvents.Ping)}>Ping</Button>
-      </div>
       <div className="flex items-end gap-16">
         <Input
           label="Pseudo"

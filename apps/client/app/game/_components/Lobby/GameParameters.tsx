@@ -17,8 +17,8 @@ export default function GameParameters({
   return (
     <div className="space-y-8">
       <div className="md:flex md:items-center">
-        <label className="md:w-280">Mode de jeu</label>
         <Slider
+          label="Mode de jeu"
           value={parameters.gameMode}
           options={[
             { label: "Classique", value: "mixed" },
@@ -32,8 +32,8 @@ export default function GameParameters({
         />
       </div>
       <div className="md:flex md:items-center">
-        <label className="md:w-280">Nombres de manches</label>
         <Slider
+          label="Nombres de manches"
           value={parameters.roundCount}
           options={[
             { label: "2", value: 2 },
@@ -52,8 +52,8 @@ export default function GameParameters({
         />
       </div>
       <div className="md:flex md:items-center">
-        <label className="md:w-280">Chronomètre</label>
         <Slider
+          label="Chronomètre"
           value={parameters.roundDuration}
           options={[
             { label: "30s", value: 30 },
@@ -70,7 +70,7 @@ export default function GameParameters({
 
       {parameters.gameMode !== "words" ? (
         <>
-          <div>Des nombres</div>
+          <div className="text-xl font-semibold">Des nombres</div>
           <NumbersRoundParameters
             parameters={parameters.numbersParameters}
             setParameters={(numbersParameters) =>
@@ -82,7 +82,7 @@ export default function GameParameters({
       ) : null}
       {parameters.gameMode !== "numbers" ? (
         <>
-          <div>Des nombres</div>
+          <div className="text-xl font-semibold">Des mots</div>
           <WordsRoundParameters
             parameters={parameters.wordsParameters}
             setParameters={(wordsParameters) =>

@@ -32,11 +32,7 @@ export function useCountdown(
       }
     }, INTERVAL_IN_MILLISECONDS);
 
-    return () => {
-      setTime(null);
-      setDuration(null);
-      clearInterval(intervalId);
-    };
+    return () => clearInterval(intervalId);
   }, [duration]);
 
   return [

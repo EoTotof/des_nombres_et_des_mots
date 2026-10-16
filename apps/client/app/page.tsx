@@ -1,14 +1,20 @@
 "use client";
 
-import Link from "next/link";
+import Button from "@/components/Button";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Link href="/game">Partie à plusieurs</Link>
-        <Link href="/numbers">Juste un nombre</Link>
-        <Link href="/words">Juste un mot</Link>
+    <div className="flex flex-col flex-1 items-center justify-center font-sans">
+      <main className="flex flex-1 w-full max-w-md flex-col gap-16 items-center justify-between py-32 px-16 sm:items-start">
+        <Button href="/game" className="w-full text-center">
+          Partie à plusieurs
+        </Button>
+        <Button href="/numbers" className="w-full text-center">
+          Juste un nombre
+        </Button>
+        <Button href="/words" className="w-full text-center">
+          Juste un mot
+        </Button>
       </main>
     </div>
   );

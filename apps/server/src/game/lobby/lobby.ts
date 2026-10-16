@@ -91,6 +91,10 @@ export class Lobby {
     this.gameInstanceManager.undoMove(playerId, moveId);
   }
 
+  public startNextRound() {
+    this.gameInstanceManager.startRound();
+  }
+
   public serializeLobbyState(
     playerId: PlayerId,
   ): ServerPayloads[ServerEvents.LobbyState] {

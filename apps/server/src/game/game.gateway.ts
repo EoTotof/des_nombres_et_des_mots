@@ -152,6 +152,15 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit {
     lobby!.undoMove(socket.data.playerId!, payload.moveId);
   }
 
+  @UseGuards(IsLobbyOwnerGuard)
+  @SubscribeMessage(ClientEvents.StartNextRound)
+  onStartNextRound(@ConnectedSocket() socket: PlayerSocket): void {
+    const lobby = this.lobbyService.manager.findPlayerLobby(
+      socket.data.playerId!,
+    );
+    lobby!.startNextRound();
+  }
+
   @SubscribeMessage(ClientEvents.Ping)
   onPing(socket: Socket): void {
     socket.emit(ServerEvents.Pong, {

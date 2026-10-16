@@ -17,8 +17,8 @@ export default function GameParameters({
   return (
     <div className="space-y-8">
       <div className="md:flex md:items-center">
-        <label className="md:w-280">Chronomètre</label>
         <Slider
+          label="Chronomètre"
           value={parameters.duration}
           options={[
             { label: "30s", value: 30 },
@@ -63,8 +63,8 @@ export function RoundParameters({
   return (
     <>
       <div className="md:flex md:items-center">
-        <label className="md:w-280">Grands nombres</label>
         <Slider
+          label="Grands nombres"
           value={parameters.bigNumberCount}
           options={[
             { label: "0", value: 0 },
@@ -81,7 +81,9 @@ export function RoundParameters({
         />
       </div>
       <div className="md:flex md:items-center">
-        <label className="md:w-280">Autoriser les nombres inatteignables</label>
+        <label className="mb-2 md:w-280 md:mb-0">
+          Autoriser les nombres inatteignables
+        </label>
         <div>
           <Switch
             enabled={parameters.allowUnreachableTarget}

@@ -21,14 +21,14 @@ export default function GameResultDialog({
           <div className="flex-1">
             <div className="mb-8">Votre réponse :</div>
             <div className="space-y-8">
-              <WordHistory words={gameState.words} size="sm" />
+              <WordHistory words={gameState.longestWords} size="sm" />
             </div>
           </div>
         ) : null}
         <div className="flex-1">
           <div className="mb-8">Solution :</div>
           <div className="space-y-8">
-            <WordHistory words={solution.words} size="sm" />
+            <WordHistory words={solution.longestWords.slice(0, 5)} size="sm" />
           </div>
         </div>
       </div>

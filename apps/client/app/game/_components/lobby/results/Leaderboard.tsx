@@ -75,7 +75,12 @@ export default function Leaderboard({
           >
             <span>{rank}</span>
             <span>{name}</span>
-            <span>{score}</span>
+            <span>
+              {score}{" "}
+              <span className="text-lg">
+                (+{scores[scores.length - 1]?.[name]})
+              </span>
+            </span>
           </motion.li>
         ))}
       </ul>

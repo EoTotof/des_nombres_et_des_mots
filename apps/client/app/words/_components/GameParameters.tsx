@@ -16,8 +16,8 @@ export default function GameParameters({
   return (
     <div className="space-y-8">
       <div className="md:flex md:items-center">
-        <label className="md:w-280">Chronomètre</label>
         <Slider
+          label="Chronomètre"
           value={parameters.duration}
           options={[
             { label: "30s", value: 30 },
@@ -61,8 +61,8 @@ export function RoundParameters({
 }) {
   return (
     <div className="md:flex md:items-center">
-      <label className="md:w-280">Voyelles</label>
       <Slider
+        label="Voyelles"
         value={parameters.vowelCount}
         options={[
           { label: "2", value: 2 },

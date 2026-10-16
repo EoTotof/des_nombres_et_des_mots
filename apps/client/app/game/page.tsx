@@ -6,7 +6,7 @@ import { PlayerId } from "@dnedm/game-core";
 import { useSocket } from "./_hooks/useSocket";
 import { useEffect, useState } from "react";
 import GameMenu from "./_components/GameMenu";
-import LobbyPage from "./_components/Lobby/LobbyPage";
+import LobbyPage from "./_components/lobby/LobbyPage";
 
 export default function Game() {
   const { value: playerId, set: setPlayerId } =

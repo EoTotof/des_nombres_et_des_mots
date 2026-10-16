@@ -1,9 +1,12 @@
-import { Input as BaseUIInput } from "@base-ui/react/input";
+import {
+  Input as BaseUIInput,
+  InputProps as BaseUIInputProps,
+} from "@base-ui/react/input";
 
-type InputProps = {
+type InputProps = BaseUIInputProps & {
   value?: string;
-  onValueChange: (value: string) => void;
-  label: string;
+  onValueChange?: (value: string) => void;
+  label?: string;
   placeholder?: string;
 };
 
@@ -15,7 +18,7 @@ export default function Input({
 }: InputProps) {
   return (
     <label className="flex flex-col items-start gap-1">
-      <span className="font-semibold">{label}</span>
+      {label ? <span className="font-semibold">{label}</span> : null}
       <BaseUIInput
         className="bg-white px-8 py-8 text-md placeholder:text-neutral-500"
         value={value}

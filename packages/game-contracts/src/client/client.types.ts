@@ -16,4 +16,5 @@ export interface ClientToServerEvents {
   [ClientEvents.UndoMove]: (
     payload: ClientPayloads[ClientEvents.UndoMove],
   ) => void;
+  [ClientEvents.StartNextRound]: () => void;
 }
