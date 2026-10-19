@@ -7,7 +7,7 @@ import {
   NumbersGameState,
 } from "@dnedm/game-core";
 
-const RESULTS_TIMER = 30;
+const RESULTS_TIMER = 300; // TODO ROLLBACK TO 30SEC
 
 export class GameInstanceManager {
   gameParameters: GameParameters;

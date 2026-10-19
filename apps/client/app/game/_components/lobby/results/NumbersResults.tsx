@@ -4,6 +4,8 @@ import {
   NumbersRoundPayload,
   parseNumbersGamePayload,
 } from "@dnedm/game-contracts";
+import { NumbersGameState } from "@dnedm/game-core";
+import ResultsLayout from "./ResultsLayout";
 
 export default function NumbersResults({
   payload,
@@ -12,40 +14,29 @@ export default function NumbersResults({
   payload: NumbersRoundPayload;
   currentPlayer: string;
 }) {
-  const currentPlayerGamePayload = payload.playerStates[currentPlayer];
+  return (
+    <ResultsLayout
+      gameStates={payload.playerStates}
+      currentPlayer={currentPlayer}
+      gamePayloadParser={parseNumbersGamePayload}
+      GameStateDisplay={NumbersGameStateDisplay}
+    />
+  );
+}
 
-  if (!currentPlayerGamePayload) {
-    throw Error("Player not found");
+function NumbersGameStateDisplay({
+  gameState,
+}: {
+  gameState: NumbersGameState;
+}) {
+  if (gameState.operations.length === 0) {
+    return "-";
   }
 
-  const currentPlayerGameState = parseNumbersGamePayload(
-    currentPlayerGamePayload,
-  );
-
-  const solution = currentPlayerGameState.getSolvedGameState();
-
   return (
-    <NumbersGameStateContext
-      value={{ currentGameState: currentPlayerGameState }}
-    >
-      <div className="flex flex-col gap-16 text-center text-xl md:flex-row">
-        {currentPlayerGameState.operations.length > 0 ? (
-          <div className="flex-1">
-            <div className="mb-8">Votre réponse :</div>
-            <div className="space-y-8">
-              <MoveHistory
-                operations={currentPlayerGameState.operations}
-                size="sm"
-              />
-            </div>
-          </div>
-        ) : null}
-        <div className="flex-1">
-          <div className="mb-8">Solution :</div>
-          <div className="space-y-8">
-            <MoveHistory operations={solution.operations} size="sm" />
-          </div>
-        </div>
+    <NumbersGameStateContext value={{ currentGameState: gameState }}>
+      <div className="space-y-8">
+        <MoveHistory operations={gameState.operations} size="sm" />
       </div>
     </NumbersGameStateContext>
   );
