@@ -1,21 +1,15 @@
 import { useRoundCountdown } from "@/app/game/_hooks/useRoundCountdown";
 import LoadingScreen from "@/components/LoadingScreen";
-import {
-  CurrentRoundPayload,
-  ServerEvents,
-  ServerPayloads,
-} from "@dnedm/game-contracts";
+import { CurrentRoundPayload } from "@dnedm/game-contracts";
 import { useCallback, useState } from "react";
 import { Socket } from "socket.io-client";
 import NumbersRound from "./NumbersRound";
 import WordsRound from "./WordsRound";
+import { useLobbyContext } from "@/app/game/_contexts/lobbyContext";
 
-type RoundPageProps = {
-  socket: Socket;
-  lobbyState: ServerPayloads[ServerEvents.LobbyState];
-};
+export default function RoundPage() {
+  const { socket, lobbyState } = useLobbyContext();
 
-export default function RoundPage({ socket, lobbyState }: RoundPageProps) {
   if (!lobbyState.gameState?.currentRound) {
     throw Error("gameState.currentRound should be defined");
   }

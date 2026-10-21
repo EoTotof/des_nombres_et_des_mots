@@ -58,10 +58,6 @@ export class Lobby {
   }
 
   public removePlayer(playerId: PlayerId) {
-    if (this.gameInstanceManager.gameInstance) {
-      throw Error("Cannot remove a player when a game has already started");
-    }
-
     this.players.splice(
       this.players.findIndex(({ id }) => id === playerId),
       1,

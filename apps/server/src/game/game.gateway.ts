@@ -105,6 +105,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit {
     this.lobbyService.manager.joinLobby(player, payload.lobbyId);
   }
 
+  @UseGuards(IsInLobbyGuard)
+  @SubscribeMessage(ClientEvents.LeaveLobby)
+  onLeaveLobby(@ConnectedSocket() socket: PlayerSocket): void {
+    const lobby = this.lobbyService.manager.findPlayerLobby(
+      socket.data.playerId!,
+    );
+
+    this.lobbyService.manager.leaveLobby(socket.data.playerId!, lobby!.id);
+    socket.emit(ServerEvents.LobbyState, null);
+  }
+
   @UseGuards(IsLobbyOwnerGuard)
   @SubscribeMessage(ClientEvents.UpdateGameParameters)
   onUpdateGameParameters(

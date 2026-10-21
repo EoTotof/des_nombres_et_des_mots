@@ -1,8 +1,4 @@
-import {
-  ClientEvents,
-  ServerEvents,
-  ServerPayloads,
-} from "@dnedm/game-contracts";
+import { ClientEvents } from "@dnedm/game-contracts";
 import Leaderboard from "./Leaderboard";
 import NumbersResults from "./NumbersResults";
 import WordsResults from "./WordsResults";
@@ -10,14 +6,11 @@ import { useRoundCountdown } from "@/app/game/_hooks/useRoundCountdown";
 import { useCallback, useState } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
 import Button from "@/components/Button";
-import { Socket } from "socket.io-client";
+import { useLobbyContext } from "@/app/game/_contexts/lobbyContext";
 
-type ResultPageProps = {
-  socket: Socket;
-  lobbyState: ServerPayloads[ServerEvents.LobbyState];
-};
+export default function ResultPage() {
+  const { socket, lobbyState } = useLobbyContext();
 
-export default function ResultPage({ socket, lobbyState }: ResultPageProps) {
   if (!lobbyState.gameState) {
     throw Error("gameState should be defined");
   }

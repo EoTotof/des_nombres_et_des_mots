@@ -14,9 +14,10 @@ export function useSocket(
       return;
     }
 
-    function onLobbyState({
-      playerId,
-    }: ServerPayloads[ServerEvents.LobbyState]) {
+    function onLobbyState(lobbyState: ServerPayloads[ServerEvents.LobbyState]) {
+      if (!lobbyState) return;
+
+      const { playerId } = lobbyState;
       setPlayerId(playerId);
     }
 

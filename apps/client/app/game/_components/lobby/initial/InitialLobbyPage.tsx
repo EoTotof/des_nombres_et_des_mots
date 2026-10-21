@@ -1,25 +1,15 @@
 import { GameParameters as GameParametersT } from "@dnedm/game-core";
-import {
-  ClientEvents,
-  ServerEvents,
-  ServerPayloads,
-} from "@dnedm/game-contracts";
-import { Socket } from "socket.io-client";
+import { ClientEvents } from "@dnedm/game-contracts";
 import Button from "@/components/Button";
 import { useState } from "react";
 import Input from "@/components/inputs/Input";
 import { Copy, CopyCheck } from "lucide-react";
 import GameParameters from "./GameParameters";
+import { useLobbyContext } from "@/app/game/_contexts/lobbyContext";
 
-type InitialLobbyPageProps = {
-  socket: Socket;
-  lobbyState: ServerPayloads[ServerEvents.LobbyState];
-};
+export default function InitialLobbyPage() {
+  const { socket, lobbyState, onLeave } = useLobbyContext();
 
-export default function InitialLobbyPage({
-  socket,
-  lobbyState,
-}: InitialLobbyPageProps) {
   const isLobbyOwner = lobbyState.playerName === lobbyState.owner;
   function updateParameters(parameters: GameParametersT) {
     socket.emit(ClientEvents.UpdateGameParameters, parameters);
@@ -67,6 +57,9 @@ export default function InitialLobbyPage({
           Démarrer la partie
         </Button>
       ) : null}
+      <Button color="secondary" onClick={onLeave}>
+        Quitter la partie
+      </Button>
     </div>
   );
 }

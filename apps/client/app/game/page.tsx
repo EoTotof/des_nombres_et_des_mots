@@ -6,7 +6,7 @@ import { PlayerId } from "@dnedm/game-core";
 import { useSocket } from "./_hooks/useSocket";
 import { useEffect, useState } from "react";
 import GameMenu from "./_components/GameMenu";
-import LobbyPageRouter from "./_components/lobby/LobbyPageRouter";
+import LobbyPage from "./_components/lobby/LobbyPage";
 
 export default function Game() {
   const { value: playerId, set: setPlayerId } =
@@ -56,5 +56,5 @@ export default function Game() {
     return <GameMenu socket={socket} />;
   }
 
-  return <LobbyPageRouter socket={socket} lobbyState={lobbyState} />;
+  return <LobbyPage socket={socket} lobbyState={lobbyState} />;
 }

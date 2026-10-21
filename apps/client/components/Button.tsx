@@ -12,10 +12,13 @@ function isLinkProps(
   return "href" in props;
 }
 
-export default function Button(props: ButtonProps) {
+export default function Button(
+  props: ButtonProps & { color?: keyof typeof colorClassNames },
+) {
   const classes = clsx(
-    "px-16 py-8 text-2xl text-white font-semibold bg-sky-600 rounded-lg cursor-pointer hover:bg-sky-700 active:bg-sky-800",
+    "px-16 py-8 text-2xl text-white font-semibold rounded-lg cursor-pointer",
     "transition-transform hover:scale-[1.05]",
+    colorClassNames[props.color || "primary"],
     props.className,
   );
 
@@ -25,3 +28,8 @@ export default function Button(props: ButtonProps) {
 
   return <button {...props} className={classes} />;
 }
+
+const colorClassNames = {
+  primary: "bg-sky-600 hover:bg-sky-700 active:bg-sky-800",
+  secondary: "bg-slate-500 hover:bg-slate-600 active:bg-slate-700",
+};

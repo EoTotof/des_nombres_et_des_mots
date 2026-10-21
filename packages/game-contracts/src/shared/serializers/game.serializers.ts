@@ -56,7 +56,7 @@ export function serializePreviousRound(
     return {
       type: "numbers",
       playerStates: Object.fromEntries(
-        Object.entries(previousRound.playerStates).map(
+        Object.entries(previousRound.playerBestAttempts).map(
           ([playerId, gameState]) => [
             getPlayerFromPlayerId(playerId, players).name,
             serializeNumbersGame(gameState, false),

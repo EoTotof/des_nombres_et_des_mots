@@ -69,12 +69,22 @@ export class LobbyManager {
     this.playerLobbies.set(player.id, lobby.id);
   }
 
+  leaveLobby(playerId: string, lobbyId: string) {
+    if (!this.playerLobbies.has(playerId)) {
+      throw new Error("Player is not in a lobby");
+    }
+
+    const lobby = this.getLobby(lobbyId);
+    lobby.removePlayer(playerId);
+    this.playerLobbies.delete(playerId);
+  }
+
   private deleteInactiveLobbies(): void {
     const now = Date.now();
 
     for (const lobby of this.lobbies.values()) {
       if (
-        lobby.players.length === 0 &&
+        lobby.players.length === 0 ||
         now - lobby.lastActivityAt.getTime() >= LOBBY_INACTIVITY_TIMEOUT
       ) {
         this.deleteLobby(lobby.id);

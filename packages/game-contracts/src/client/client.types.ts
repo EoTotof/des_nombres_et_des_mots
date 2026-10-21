@@ -6,6 +6,10 @@ export interface ClientToServerEvents {
   [ClientEvents.CreateLobby]: (
     payload: ClientPayloads[ClientEvents.CreateLobby],
   ) => void;
+  [ClientEvents.JoinLobby]: (
+    payload: ClientPayloads[ClientEvents.JoinLobby],
+  ) => void;
+  [ClientEvents.LeaveLobby]: () => void;
   [ClientEvents.UpdateGameParameters]: (
     payload: ClientPayloads[ClientEvents.UpdateGameParameters],
   ) => void;

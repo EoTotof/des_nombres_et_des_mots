@@ -13,5 +13,5 @@ export type ServerPayloads = {
     gameState: GamePayload | null;
     roundEndsAt: number | null;
     nextRoundStartsAt: number | null;
-  };
+  } | null;
 };
