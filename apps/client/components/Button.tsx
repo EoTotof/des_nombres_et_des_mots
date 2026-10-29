@@ -13,12 +13,17 @@ function isLinkProps(
 }
 
 export default function Button(
-  props: ButtonProps & { color?: keyof typeof colorClassNames },
+  props: ButtonProps & {
+    color?: keyof typeof colorClassNames;
+    disabled?: boolean;
+  },
 ) {
+  const { disabled } = props;
+
   const classes = clsx(
-    "px-16 py-8 text-2xl text-white font-semibold rounded-lg cursor-pointer",
-    "transition-transform hover:scale-[1.05]",
-    colorClassNames[props.color || "primary"],
+    "px-16 py-8 text-2xl text-white font-semibold rounded-lg",
+    !disabled ? "cursor-pointer transition-transform hover:scale-[1.05]" : null,
+    disabled ? "bg-slate-300" : colorClassNames[props.color || "primary"],
     props.className,
   );
 

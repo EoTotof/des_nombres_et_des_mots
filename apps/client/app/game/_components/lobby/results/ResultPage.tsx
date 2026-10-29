@@ -9,7 +9,7 @@ import Button from "@/components/Button";
 import { useLobbyContext } from "@/app/game/_contexts/lobbyContext";
 
 export default function ResultPage() {
-  const { socket, lobbyState } = useLobbyContext();
+  const { socket, lobbyState, onLeave } = useLobbyContext();
 
   if (!lobbyState.gameState) {
     throw Error("gameState should be defined");
@@ -28,7 +28,7 @@ export default function ResultPage() {
   const roundNumber = lobbyState.gameState.pastRoundScores.length + 1;
 
   return (
-    <>
+    <div className="flex flex-col gap-16">
       {showLoadingScreen && <LoadingScreen />}
       <div className="mb-8 text-2xl font-semibold">
         Résultats de la manche {roundNumber}
@@ -59,7 +59,11 @@ export default function ResultPage() {
             </Button>
           ) : null}
         </>
-      ) : null}
-    </>
+      ) : (
+        <Button color="secondary" onClick={onLeave}>
+          Quitter la partie
+        </Button>
+      )}
+    </div>
   );
 }
