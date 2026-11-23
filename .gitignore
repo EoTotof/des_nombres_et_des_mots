@@ -1,4 +1,4 @@
 node_modules
 dist
-**/*.tsbuildinfo
+*.tsbuildinfo
 des_nombres_et_des_mots.code-workspace

@@ -8,7 +8,7 @@
   "private": "true",
   "scripts": {
     "dev": "pnpm --parallel --recursive dev",
-    "test": "pnpm --recursive test",
+    "test": "pnpm --recursive --if-present test",
     "build": "pnpm --recursive build",
     "lint": "pnpm --recursive lint"
   },

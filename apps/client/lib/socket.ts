@@ -8,7 +8,7 @@ export function getSocket(playerId: PlayerId | null | undefined): Socket {
     return socket;
   }
 
-  socket = io("http://localhost:3001", {
+  socket = io({
     path: "/wsapi",
     autoConnect: false,
     transports: ["websocket"],
