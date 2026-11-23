@@ -47,7 +47,6 @@ USER node
 
 COPY --from=builder --chown=node:node /app/apps/client/.next/standalone ./
 COPY --from=builder --chown=node:node /app/apps/client/.next/static ./apps/client/.next/static
-COPY --from=builder --chown=node:node /app/apps/client/public ./apps/client/public
 COPY --from=builder /app/packages/game-core ./packages/game-core
 COPY --from=builder /app/packages/game-contracts ./packages/game-contracts
 
